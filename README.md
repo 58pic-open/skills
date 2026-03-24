@@ -64,7 +64,7 @@ python3 ~/.claude/skills/58pic/scripts/init_config.py --api-key sk_your_key
 
 ## 使用文档
 
-详见 [安装与使用教程](./58pic_tutorial.html) 或访问 [千图 AI 开放平台](https://ai.58pic.com)。
+详见 [安装与使用教程](./58pic_tutorial.html) 或访问 [千图 AI 开放平台](https://ai.58pic.com/history?openHistory=1&historyType=5)。
 
 ## License
 
