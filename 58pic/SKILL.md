@@ -266,7 +266,7 @@ python3 "$SKILL_DIR/preview.py" \
   "ai_results": [
     {
       "ai_id": "5182589",
-      "model": "千图万画 2.0",
+      "model": "全能香蕉2.0",
       "prompt": "春节主题海报",
       "timestamp": "2024-03-26 10:35:00",
       "images": [

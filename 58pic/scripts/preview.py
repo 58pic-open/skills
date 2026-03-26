@@ -700,7 +700,8 @@ def main():
         f.write(html)
 
     print(f"✅ 预览页面已生成: {output_path}")
-    print(f"   搜索结果: {len(data['search']['items'])} 条")
+    search_items = data['search'].get('items') or (data['search'].get('history') or [{}])[0].get('items', [])
+    print(f"   搜索结果: {len(search_items)} 条")
     print(f"   已下载:   {len(data['downloads'])} 个")
     print(f"   AI 生成:  {sum(len(r['images']) for r in data['ai_results'])} 张")
     return output_path

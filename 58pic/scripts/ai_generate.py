@@ -141,6 +141,15 @@ def image_to_base64(image_path):
     return f"data:{mime};base64,{base64.b64encode(data).decode('utf-8')}"
 
 
+def is_api_ok(result):
+    """开放平台部分接口成功为 code=200，部分为 code=1 + msg=success。"""
+    c = result.get("code")
+    if c in (200, 1):
+        return True
+    msg = (result.get("msg") or "").lower()
+    return msg == "success"
+
+
 def poll_task_status(config, ai_id, max_wait=180, interval=5):
     """轮询任务状态，status=3 为成功"""
     elapsed = 0
@@ -150,7 +159,7 @@ def poll_task_status(config, ai_id, max_wait=180, interval=5):
         result = api_call(config, "GET", "open-platform/same-style-status",
                           payload={"ai_id": str(ai_id)}, use_get_params=True)
 
-        if result.get("code") != 200:
+        if not is_api_ok(result):
             print(f"\n❌ 查询任务失败: {result.get('msg', '未知错误')}")
             sys.exit(1)
 
@@ -211,6 +220,12 @@ def main():
     parser.add_argument("--output-dir", default=_cfg_dir,
                         help=f"输出目录（默认：{_cfg_dir}）")
     parser.add_argument("--max-wait", type=int, default=180, help="最长等待秒数（默认 180）")
+    parser.add_argument(
+        "--aspect-id",
+        type=int,
+        default=None,
+        help="比例选项 ID（见 list_models 缓存中 select_options，如全能香蕉2.0 的 16:9 为 2）",
+    )
     args = parser.parse_args()
 
     output_dir = os.path.abspath(args.output_dir)
@@ -228,17 +243,41 @@ def main():
 
     # 获取模型 ID
     model = args.model or defaults.get("model")
+    model_name = ""
     if not model:
-        print("❌ 未指定模型 ID，请先运行 list_models.py 查询可用模型，然后：")
-        print("   python3 init_config.py --default-model 模型ID")
-        print("   或在命令行加 --model 模型ID")
-        sys.exit(1)
+        # 自动从 API 获取排序第一的模型
+        print("ℹ️  未配置默认模型，自动获取排序最高的可用模型...")
+        models_result = api_call(config, "GET", "open-platform/available-models")
+        if is_api_ok(models_result):
+            image_models = models_result.get("data", {}).get("models", {}).get("image", [])
+            if image_models:
+                first = image_models[0]
+                model = str(first["id"])
+                model_name = first.get("name", "")
+                print(f"   自动选择: {model_name}（ID: {model}）")
+        if not model:
+            print("❌ 无法获取可用模型，请手动指定：")
+            print("   python3 init_config.py --default-model 模型ID")
+            print("   或在命令行加 --model 模型ID")
+            sys.exit(1)
+    else:
+        # 尝试从缓存中获取模型名称
+        if os.path.exists(MODELS_CACHE_FILE):
+            try:
+                with open(MODELS_CACHE_FILE, "r", encoding="utf-8") as f:
+                    cache = json.load(f)
+                for m in cache.get("image_models", cache.get("models", {}).get("image", [])):
+                    if str(m.get("id")) == str(model):
+                        model_name = m.get("name", "")
+                        break
+            except Exception:
+                pass
 
     prompt = args.prompt or "参考当前作品的风格，重新生成一张"
     generate_nums = max(1, min(16, args.generate_nums))
 
     print(f"🎨 千图 AI 做同款")
-    print(f"   模型 ID: {model}")
+    print(f"   模型: {model_name or model}（ID: {model}）" if model_name else f"   模型 ID: {model}")
     print(f"   描述: {prompt[:80]}")
     print(f"   生成张数: {generate_nums}")
 
@@ -288,15 +327,24 @@ def main():
 
     payload["prompt"] = prompt
     payload["ai_title"] = prompt
+    if args.aspect_id is not None:
+        payload["Aspect"] = args.aspect_id
+        print(f"   比例选项 Aspect ID: {args.aspect_id}")
 
     print("\n📤 正在提交做同款任务...")
     result = api_call(config, "POST", "open-platform/same-style", payload)
 
-    if result.get("code") != 200:
+    if not is_api_ok(result):
         print(f"❌ 提交失败: {result.get('msg', '未知错误')}")
         sys.exit(1)
 
-    data = result.get("data", {})
+    raw_data = result.get("data")
+    if isinstance(raw_data, list) and raw_data:
+        data = raw_data[0] if isinstance(raw_data[0], dict) else {}
+    elif isinstance(raw_data, dict):
+        data = raw_data
+    else:
+        data = {}
     ai_id = data.get("ai_id")
     task_id = data.get("task_id")
 
@@ -319,7 +367,8 @@ def main():
     downloaded_files = []
 
     for i, detail in enumerate(details):
-        if detail.get("status") != 3:
+        # 接口可能返回整数 3 或字符串 "3"
+        if str(detail.get("status")) != "3":
             continue
 
         img_url = detail.get("download_url") or detail.get("preview_url") or detail.get("image_url")

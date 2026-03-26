@@ -170,7 +170,7 @@ POST JSON：`{"pid": "74860190"}`
       "image": [
         {
           "id": 4740,
-          "name": "千图万画 2.0",
+          "name": "全能香蕉2.0",
           "capabilities": {
             "single_reference_supported": true,
             "multi_reference_supported": false,
