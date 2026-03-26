@@ -14,9 +14,10 @@ npx skills add github:58pic-open/skills/58pic --tool windsurf
 npx skills add github:58pic-open/skills/58pic --tool continue
 npx skills add github:58pic-open/skills/58pic --tool vscode
 
-# 本地安装（克隆仓库后）
+# 本地安装（克隆官方仓库后）
 git clone https://github.com/58pic-open/skills.git
-npx skills add ./skills/58pic
+cd skills
+npx skills add ./58pic
 ```
 
 ## 配置

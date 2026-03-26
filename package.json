@@ -3,5 +3,9 @@
   "private": true,
   "workspaces": ["58pic"],
   "description": "千图网官方 AI Skill 集合",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/58pic-open/skills.git"
+  }
 }

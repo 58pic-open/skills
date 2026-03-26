@@ -2,6 +2,8 @@
 
 千图网（58pic）官方 AI Skill 集合，适用于 Claude Code、Cowork、Cursor、Windsurf、Continue 等 AI 工具。
 
+**远程仓库：** [https://github.com/58pic-open/skills](https://github.com/58pic-open/skills)
+
 ## 可用 Skills
 
 | Skill | 功能 |
