@@ -16,7 +16,43 @@ import urllib.error
 import urllib.parse
 
 CONFIG_FILE = os.path.expanduser("~/.58pic_config.json")
+SESSION_FILENAME = "session.json"
+DEFAULT_OUTPUT_DIR = "./58pic_output"
 
+
+def get_config_output_dir():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f).get("output_dir", "")
+        except Exception:
+            pass
+    return ""
+
+
+# ── Session helpers ──────────────────────────────────────────────────────────
+
+def load_session(output_dir):
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    if os.path.exists(session_file):
+        try:
+            with open(session_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"output_dir": os.path.abspath(output_dir),
+            "searches": [], "downloads": [], "ai_results": []}
+
+
+def save_session(session, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    with open(session_file, "w", encoding="utf-8") as f:
+        json.dump(session, f, ensure_ascii=False, indent=2)
+    return session_file
+
+
+# ── API ──────────────────────────────────────────────────────────────────────
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
@@ -31,7 +67,6 @@ def get_download_info(config, pid):
     base_url = config.get("base_url", "https://ai.58pic.com/api/")
     api_key = config["api_key"]
 
-    # 使用 GET 方式
     params = urllib.parse.urlencode({"r": "open-platform/image-download", "pid": str(pid)})
     url = f"{base_url}?{params}"
 
@@ -56,7 +91,7 @@ def get_download_info(config, pid):
         try:
             err_data = json.loads(error_body)
             print(f"   错误详情: {err_data.get('msg', error_body)}")
-        except:
+        except Exception:
             pass
         sys.exit(1)
     except urllib.error.URLError as e:
@@ -100,10 +135,13 @@ def download_file(download_url, output_path):
 def main():
     parser = argparse.ArgumentParser(description="千图网素材下载（扣 1 点）")
     parser.add_argument("--pid", required=True, help="千图素材 PID")
-    parser.add_argument("--output-dir", default="/sessions/jolly-nice-feynman/mnt/skills/", help="下载目标目录")
+    _cfg_dir = get_config_output_dir() or DEFAULT_OUTPUT_DIR
+    parser.add_argument("--output-dir", default=_cfg_dir,
+                        help=f"下载目标目录（默认：{_cfg_dir}）")
     parser.add_argument("--preview-only", action="store_true", help="仅获取预览图 URL，不下载高清图")
     args = parser.parse_args()
 
+    output_dir = os.path.abspath(args.output_dir)
     config = load_config()
 
     print(f"📦 获取素材 {args.pid} 的下载信息...（将扣 1 点）")
@@ -125,11 +163,7 @@ def main():
         print(f"🖼️  预览图 URL: {preview_url}")
         return
 
-    if not download_url:
-        print("❌ 未获取到下载链接")
-        sys.exit(1)
-
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     # 从 URL 推断扩展名
     url_path = download_url.split("?")[0].split("/")[-1]
@@ -138,7 +172,7 @@ def main():
     else:
         filename = f"58pic_{args.pid}.jpg"
 
-    output_path = os.path.join(args.output_dir, filename)
+    output_path = os.path.join(output_dir, filename)
 
     print(f"⬇️  正在下载: {filename}")
     success = download_file(download_url, output_path)
@@ -146,14 +180,31 @@ def main():
     if success:
         file_size = os.path.getsize(output_path)
         print(f"📁 文件保存至: {output_path} ({file_size//1024}KB)")
+
+        # 更新 session.json
+        session = load_session(output_dir)
+        session["downloads"].append({
+            "pid": str(args.pid),
+            "filename": filename,
+            "path": output_path,
+            "preview_url": preview_url,
+            "width": str(width),
+            "height": str(height),
+            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        })
+        session_file = save_session(session, output_dir)
+
         result_info = {
             "success": True,
             "pid": args.pid,
             "filename": filename,
             "output_path": output_path,
             "preview_url": preview_url,
+            "session_file": session_file,
+            "output_dir": output_dir,
         }
-        print(f"\n__DOWNLOAD_RESULT__:{json.dumps(result_info)}")
+        print(f"📋 Session 已更新: {session_file}")
+        print(f"\n__DOWNLOAD_RESULT__:{json.dumps(result_info, ensure_ascii=False)}")
     else:
         sys.exit(1)
 

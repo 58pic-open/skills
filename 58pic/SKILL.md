@@ -11,221 +11,285 @@ description: >
   - 用户说"千图做同款"、"58pic AI生成"、"基于这张图做同款"
   - 用户说"下载千图素材"、"58pic下载"、"下载这个PID的图"
   - 用户提到"PID"并操作千图素材
-  - 用户首次使用本 skill 时，需要先完成 API Key 初始化
+  - 用户首次使用本 skill 时，需要先完成配置初始化
 
-  **首次使用必须先初始化 API Key**，访问以下链接创建：
-  https://ai.58pic.com/history?openHistory=1&historyType=5
+  **首次使用必须先完成初始化**
 ---
 
 # 千图网（58pic）AI 开放平台 Skill
 
-本 skill 提供两个子指令，**首次使用前请完成初始化**。
+## 脚本路径
+
+```bash
+SKILL_DIR=~/.claude/skill/58pic/scripts
+```
+
+---
+
+## 0. 初始化配置（首次使用 / 关键词触发）
+
+### 触发时机
+
+以下任一情况触发配置引导：
+- 用户首次提到千图/58pic
+- 用户说"配置千图"、"设置58pic"、"初始化千图"
+- 执行任何操作前检查配置，发现缺失项
+
+### Step 1：检查当前配置
+
+```bash
+python3 "$SKILL_DIR/init_config.py" --check
+```
+
+返回示例：`{"missing": ["api_key", "output_dir"], "config_file": "~/.58pic_config.json"}`
+
+根据 `missing` 数组决定需要引导的项目。**所有项目均可跳过**（按回车或用户明确说"跳过"）。
+
+### Step 2：引导设置各项（缺什么问什么）
+
+#### A. api_key（必须，不可跳过）
+
+如果 `missing` 包含 `api_key`，告知用户：
+
+> 🔑 **需要配置千图 API Key**
+>
+> 请访问以下链接，点击「新建令牌」创建：
+> **https://ai.58pic.com/history?openHistory=1&historyType=5**
+>
+> API Key 格式：`sk_xxxxxxxxxxxxxxxx`（仅创建时展示一次，请立即复制）
+
+用户提供后：
+```bash
+python3 "$SKILL_DIR/init_config.py" --api-key "sk_用户的key"
+```
+
+#### B. output_dir（可选，可跳过）
+
+如果 `missing` 包含 `output_dir`，询问：
+
+> 📁 **文件存放目录**（下载素材、AI 生成图片、预览页面将保存在此）
+>
+> 请输入目录路径，或按回车使用当前对话目录（推荐）：
+
+- 用户提供路径 → `python3 "$SKILL_DIR/init_config.py" --output-dir "用户路径"`
+- 用户跳过 → 不设置，每次操作使用当前对话工作目录下的 `58pic_output/`
+
+#### C. default_model（可选，可跳过）
+
+如果 `missing` 包含 `default_model`，且用户正在做 AI 生成，询问是否现在设置。
+也可以在首次做同款时再选择。
+
+### Step 3：确认存放目录（每次操作前）
+
+**重要**：存放目录由以下优先级决定（从高到低）：
+1. 用户在当前对话中明确说的目录
+2. `~/.58pic_config.json` 中的 `output_dir`
+3. 当前对话工作目录下的 `58pic_output/`
+
+**在开始操作前，向用户确认**：
+> 📁 文件将保存到：`{OUTPUT_DIR}`，确认吗？（可以说"改成 /其他/路径" 来更改）
+
+用 `OUTPUT_DIR` 变量存储本次对话使用的目录，后续所有操作复用。
+
+---
 
 ## API 基础信息
 
 - **Base URL**：`https://ai.58pic.com/api/`
-- **路由方式**：通过 Query 参数 `r` 指定，例如 `?r=open-platform/search-images`
-- **鉴权（二选一）**：
-  - `Authorization: Bearer <api_key>`
-  - `X-API-Key: <api_key>`
+- **鉴权**：`Authorization: Bearer <api_key>`
 - **请求体格式**：`Content-Type: application/json`
-
----
-
-## 0. 初始化：设置 API Key
-
-**首次使用时，必须先检查是否已配置 API Key。**
-
-### 检查配置
-
-```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/init_config.py --show
-```
-
-### 引导用户创建 API Key
-
-如果未配置，告知用户：
-
-> 🔑 **需要先配置千图 API Key**
->
-> 请访问以下链接，点击「新建令牌」创建您的 API Key：
-> **https://ai.58pic.com/history?openHistory=1&historyType=5**
->
-> API Key 格式：`sk_xxxxxxxxxxxxxxxx`（仅创建时展示一次，请立即复制保存）
-
-### 保存配置
-
-用户提供 API Key 后，运行：
-
-```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/init_config.py --api-key "sk_用户的key"
-```
 
 ---
 
 ## 1. 指令：58pic-search（素材搜索）
 
-### 功能说明
+### 分类 did 值（一级分类）
 
-搜索千图网素材库，展示搜索结果（含缩略图预览），用户可选择下载某个素材。
-
-**重要限制**：
-- 每页固定返回最多 **36 条**（不可自定义）
-- 页码范围：1～100
-- 分类 `kid` 仅支持以下值（传 0 表示全部）：
-
-| kid | 分类名称 |
+| did | 分类名称 |
 |-----|---------|
-| 0 | 全部（不限类别） |
-| 8 | 办公 |
-| 130 | 免抠元素 |
-| 275 | 广告设计 |
-| 276 | 字体 |
-| 668 | 摄影图 |
-| 735 | 插画 |
-| 743 | GIF动图 |
+| 0 | 全部（不传参数）|
+| 2 | 海报展板 |
+| 3 | 电商淘宝 |
+| 4 | 装饰装修 |
+| 5 | 网页UI |
+| 6 | 音乐音效 |
+| 7 | 3D素材 |
+| 8 | PPT模板 |
+| 10 | 背景 |
+| 11 | 免抠元素 |
+| 12 | Excel模板 |
+| 14 | 简历模板 |
+| 15 | Word模板 |
+| 16 | 社交媒体 |
+| 17 | 插画 |
+| 40 | 字库 |
+| 41 | 艺术字 |
+| 53 | 高清图片 |
+| 56 | 视频模板 |
+| 57 | 元素世界 |
+| 60 | AI数字艺术 |
+| 66 | 品牌广告 |
 
-### 使用方式
-
-用户说类似以下内容时触发：
-- "搜索千图 春节海报"
-- "在千图找 插画风格的圣诞素材"
-- "千图 AI 搜索 扁平风格商务人物"（AI向量搜索）
-- "千图搜索广告设计类的素材"
+每页固定 36 条，页码 1-100。
 
 ### 执行步骤
 
-**Step 1：运行搜索脚本**
+**Step 1：运行搜索**
 
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/search.py \
+python3 "$SKILL_DIR/search.py" \
   --keyword "关键词" \
   --page 1 \
-  [--kid 275] \
+  --output-dir "$OUTPUT_DIR" \
+  [--did 16] \
   [--ai-search]
 ```
 
-- `--ai-search`：使用 AI 向量搜索（适合描述性搜索，如"红色喜庆插画 灯笼 祥云"）
-- `--kid`：按分类筛选，不传或传 0 为全部
+脚本末行输出 `__SEARCH_RESULT__:{...}`，从中解析 `session_file` 和 `output_dir`。
 
-**Step 2：生成图片预览页面**
+**Step 2：生成预览页面**
 
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/preview.py \
-  --results-file /tmp/58pic_search_results.json \
-  --output /sessions/jolly-nice-feynman/mnt/skills/58pic_preview.html
+python3 "$SKILL_DIR/preview.py" \
+  --session-file "$OUTPUT_DIR/session.json"
 ```
 
-在对话中提供链接：
-[查看搜索结果预览](computer:///sessions/jolly-nice-feynman/mnt/skills/58pic_preview.html)
+预览页面输出到 `$OUTPUT_DIR/preview.html`。
 
-同时用文字列出前几条结果（pid、标题），方便用户直接复制 pid。
+提供链接（使用绝对路径）：
+`[查看搜索结果预览](computer://{OUTPUT_DIR的绝对路径}/preview.html)`
+
+同时文字列出前几条结果（pid、标题）。
 
 **Step 3：下载素材（用户指定时）**
 
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/download.py \
+python3 "$SKILL_DIR/download.py" \
   --pid "素材PID" \
-  --output-dir /sessions/jolly-nice-feynman/mnt/skills/
+  --output-dir "$OUTPUT_DIR"
 ```
 
-下载完成后提供文件链接。
+下载成功后自动更新 `session.json`，然后重新生成预览：
+
+```bash
+python3 "$SKILL_DIR/preview.py" \
+  --session-file "$OUTPUT_DIR/session.json"
+```
 
 ---
 
 ## 2. 指令：58pic-ai（AI 做同款）
 
-### 功能说明
-
-调用千图 AI "做同款"接口，以参考图片（URL、base64 或千图素材 pid）为基础，生成风格相近的新图片。
-
-**⚠️ 重要**：此接口本质是"做同款"，**必须提供至少一张参考图**（url、base64 或 pid）。若用户想纯文生图，建议告知这是基于参考图的生成。
-
-### 使用方式
-
-用户说类似以下内容时触发：
-- "用 PID 12345 做同款"
-- "参考这张图 https://... 生成一张类似的"
-- "基于这张素材做同款，换成蓝色调"
-- "千图 AI 生成，参考图是..."
-
 ### 执行步骤
 
-**Step 1：获取可用模型列表（首次使用或用户想选模型时）**
+**Step 1：获取模型列表（首次或用户想换模型时）**
 
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/list_models.py
+python3 "$SKILL_DIR/list_models.py"
 ```
 
-询问用户选择模型，并记住用户偏好：
-
+保存用户选择：
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/init_config.py \
-  --default-model "模型ID"
+python3 "$SKILL_DIR/init_config.py" --default-model "模型ID"
 ```
 
-**Step 2：提交做同款任务**
+**Step 2：提交任务**
 
-根据用户提供的参考来源，选择对应参数：
-
-**参考来源 A：千图素材 PID（最常用，优先推荐）**
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/ai_generate.py \
-  --prompt "用户的描述" \
-  --model "模型ID" \
-  --ref-pid "素材PID" \
-  [--generate-nums 1]
+# 参考来源 A：千图素材 PID
+python3 "$SKILL_DIR/ai_generate.py" \
+  --prompt "描述" --model "模型ID" --ref-pid "PID" \
+  --output-dir "$OUTPUT_DIR" [--generate-nums 1]
+
+# 参考来源 B：图片 URL
+python3 "$SKILL_DIR/ai_generate.py" \
+  --prompt "描述" --model "模型ID" --ref-url "https://..." \
+  --output-dir "$OUTPUT_DIR"
+
+# 参考来源 C：本地图片
+python3 "$SKILL_DIR/ai_generate.py" \
+  --prompt "描述" --model "模型ID" --ref-image-path "/path/to/image.jpg" \
+  --output-dir "$OUTPUT_DIR"
 ```
 
-**参考来源 B：图片 URL**
-```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/ai_generate.py \
-  --prompt "用户的描述" \
-  --model "模型ID" \
-  --ref-url "https://参考图片URL" \
-  [--generate-nums 1]
-```
+脚本自动轮询状态（`status=3` 成功，`status=2/4/5` 失败）。
+完成后自动更新 `session.json`，输出 `__GENERATE_RESULT__:{...}`。
 
-**参考来源 C：本地图片（Base64 上传）**
-```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/ai_generate.py \
-  --prompt "用户的描述" \
-  --model "模型ID" \
-  --ref-image-path "/path/to/local/image.jpg"
-```
-
-**Step 3：轮询任务状态（脚本自动完成）**
-
-脚本自动轮询 `same-style-status`（`status=3` 表示成功），打印进度。
-
-**Step 4：展示结果**
-
-生成完成后：
+**Step 3：生成预览**
 
 ```bash
-python3 /sessions/jolly-nice-feynman/mnt/skills/58pic/scripts/preview.py \
-  --image-files /path/to/result1.png /path/to/result2.png \
-  --prompt "用户描述" \
-  --model "模型名" \
-  --output /sessions/jolly-nice-feynman/mnt/skills/58pic_ai_result.html
+python3 "$SKILL_DIR/preview.py" \
+  --session-file "$OUTPUT_DIR/session.json"
 ```
 
 提供链接：
-[查看 AI 生成结果](computer:///sessions/jolly-nice-feynman/mnt/skills/58pic_ai_result.html)
+`[查看 AI 生成结果](computer://{OUTPUT_DIR的绝对路径}/preview.html)`
+
+预览页「AI 生成」tab 显示本 session 全部历史批次。
 
 ---
 
-## 参考文档
+## 预览页面数据结构（`window.PIC58_DATA`）
 
-详见：
-- `references/api_reference.md` — 完整 API 端点和参数说明（已根据官方文档更新）
+```json
+{
+  "version": 2,
+  "generated_at": "2024-03-26 10:30:00",
+  "search": {
+    "keyword": "春节海报",
+    "page": 1,
+    "total_page": 28,
+    "did_name": "海报展板",
+    "ai_search": false,
+    "search_time": "2024-03-26 10:30:00",
+    "items": [
+      {
+        "pid": "74860190",
+        "title": "春节海报模板",
+        "preview_url": "https://preview.qiantucdn.com/...",
+        "type": "image",
+        "width": "1920",
+        "height": "1080"
+      }
+    ]
+  },
+  "downloads": [
+    {
+      "pid": "74860190",
+      "filename": "58pic_74860190.jpg",
+      "path": "/abs/path/...",
+      "size": "2.3 MB",
+      "b64": "data:image/jpeg;base64,...",
+      "timestamp": "2024-03-26 10:31:00"
+    }
+  ],
+  "ai_results": [
+    {
+      "ai_id": "5182589",
+      "model": "千图万画 2.0",
+      "prompt": "春节主题海报",
+      "timestamp": "2024-03-26 10:35:00",
+      "images": [
+        {
+          "filename": "58pic_ai_20240326_103500_1.jpg",
+          "path": "/abs/path/...",
+          "size": "1.2 MB",
+          "b64": "data:image/jpeg;base64,..."
+        }
+      ]
+    }
+  ]
+}
+```
 
 ---
 
 ## 注意事项
 
 - API Key 以 `sk_` 开头，保存在 `~/.58pic_config.json`，请勿泄露
-- 搜索：每页固定 36 条，kid 只能用文档中列出的值
+- 搜索：每页固定 36 条，did 只能用文档中列出的值
 - AI 做同款：需先通过 `available-models` 获取合法模型 ID
-- 任务状态：`status=3` 为成功，图片 URL 为临时签名，过期需重新查询
-- 点数不足时返回 429，`data.remaining` 显示剩余量
+- 任务状态：`status=3` 成功，`status=2/4/5` 均为失败
+- 点数不足返回 429，`data.remaining` 显示剩余量
+- `preview_url`（搜索缩略图）直接用于 `<img src>`，浏览器可正常加载
+- 本地下载/AI 生成文件通过 base64 内嵌到预览 HTML，无需服务器

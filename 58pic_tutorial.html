@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>58pic AI Skill · 安装与使用教程</title>
+  <title>58pic AI Skill · 使用指南</title>
   <style>
     :root {
       --brand:       #E8401A;
       --brand-light: #FF6B35;
       --brand-bg:    #FFF4F0;
-      --brand-dim:   rgba(232,64,26,.08);
-      --dark:   #1d1d1f;
-      --mid:    #424245;
-      --gray:   #86868b;
-      --border: #d2d2d7;
-      --bg:     #f5f5f7;
-      --card:   #ffffff;
-      --code-bg:#1c1c1e;
-      --r-xl: 18px;
+      --brand-dim:   rgba(232,64,26,.10);
+      --dark:        #111114;
+      --mid:         #3a3a3f;
+      --gray:        #8a8a90;
+      --border:      #e4e4e8;
+      --bg:          #f7f7f9;
+      --card:        #ffffff;
+      --code-bg:     #18181b;
+      --r-xl: 20px;
       --r-lg: 14px;
       --r-md: 10px;
       --r-sm:  7px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,222 +30,282 @@
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', sans-serif;
       background: var(--bg);
       color: var(--dark);
-      line-height: 1.55;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
     /* ─── HERO ─── */
     .hero {
-      background: #000;
-      padding: 80px 24px 72px;
+      background: #0a0a0f;
+      padding: 88px 24px 80px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .hero::after {
+    .hero::before {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 60% 60% at 20% 50%, rgba(232,64,26,.45) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 50% at 80% 40%, rgba(255,107,53,.3) 0%, transparent 65%);
+        radial-gradient(ellipse 55% 65% at 18% 55%, rgba(232,64,26,.38) 0%, transparent 68%),
+        radial-gradient(ellipse 45% 50% at 82% 38%, rgba(255,107,53,.22) 0%, transparent 62%),
+        radial-gradient(ellipse 70% 40% at 50% 100%, rgba(180,30,10,.2) 0%, transparent 60%);
       pointer-events: none;
     }
-    .hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+    .hero-inner { position: relative; z-index: 1; max-width: 660px; margin: 0 auto; }
 
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 50px; padding: 5px 14px;
-      font-size: 12px; letter-spacing: .6px; color: rgba(255,255,255,.75);
-      text-transform: uppercase; margin-bottom: 22px;
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50px; padding: 5px 16px;
+      font-size: 11.5px; letter-spacing: .7px; color: rgba(255,255,255,.6);
+      text-transform: uppercase; margin-bottom: 28px;
     }
-    .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-light); display: inline-block; }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--brand-light);
+      box-shadow: 0 0 6px rgba(255,107,53,.8);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .6; transform: scale(.85); }
+    }
 
     .hero h1 {
-      font-size: clamp(36px, 6vw, 58px);
-      font-weight: 700;
-      letter-spacing: -.02em;
-      line-height: 1.1;
-      background: linear-gradient(160deg, #fff 30%, rgba(255,160,120,.9) 100%);
+      font-size: clamp(32px, 5.5vw, 54px);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.08;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, #FF6B35 0%, #FFB085 60%, #fff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 16px;
     }
     .hero-sub {
-      font-size: 17px;
-      color: rgba(255,255,255,.6);
-      max-width: 460px;
-      margin: 0 auto 32px;
-      line-height: 1.65;
+      font-size: 16.5px;
+      color: rgba(255,255,255,.52);
+      max-width: 480px;
+      margin: 14px auto 36px;
+      line-height: 1.7;
     }
-    .hero-pills {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      justify-content: center;
+    .hero-features {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      justify-content: center; margin-bottom: 36px;
     }
-    .pill {
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 50px; padding: 6px 16px;
-      font-size: 13px; color: rgba(255,255,255,.85);
+    .hf {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50px; padding: 6px 15px;
+      font-size: 13px; color: rgba(255,255,255,.78);
+      transition: background .18s;
+    }
+    .hf:hover { background: rgba(255,255,255,.12); }
+    .hero-cta {
+      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
     }
 
     /* ─── STICKY NAV ─── */
     .nav {
       position: sticky; top: 0; z-index: 200;
-      background: rgba(245,245,247,.88);
-      backdrop-filter: saturate(180%) blur(24px);
-      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      background: rgba(247,247,249,.92);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
-      max-width: 960px; margin: 0 auto;
+      max-width: 980px; margin: 0 auto;
       display: flex; overflow-x: auto;
       scrollbar-width: none;
     }
     .nav-inner::-webkit-scrollbar { display: none; }
     .nav-item {
       flex-shrink: 0;
-      padding: 14px 20px;
-      font-size: 13.5px; font-weight: 500;
+      padding: 13px 18px;
+      font-size: 13px; font-weight: 500;
       color: var(--gray); cursor: pointer;
       border-bottom: 2px solid transparent;
-      transition: color .18s, border-color .18s;
-      white-space: nowrap;
+      transition: color .16s, border-color .16s;
+      white-space: nowrap; user-select: none;
     }
     .nav-item:hover { color: var(--brand); }
-    .nav-item.active { color: var(--brand); border-bottom-color: var(--brand); }
+    .nav-item.active { color: var(--brand); border-bottom-color: var(--brand); font-weight: 600; }
 
     /* ─── LAYOUT ─── */
-    .main { max-width: 960px; margin: 0 auto; padding: 48px 20px 80px; }
+    .main { max-width: 980px; margin: 0 auto; padding: 44px 20px 88px; }
     .section { display: none; }
     .section.active { display: block; }
 
     /* ─── SECTION HEADER ─── */
-    .sec-head { margin-bottom: 32px; }
-    .sec-head h2 { font-size: 28px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
-    .sec-head p  { font-size: 15px; color: var(--gray); }
+    .sec-head { margin-bottom: 28px; }
+    .sec-head h2 { font-size: 26px; font-weight: 700; letter-spacing: -.025em; margin-bottom: 6px; }
+    .sec-head p  { font-size: 14.5px; color: var(--gray); }
+
+    /* ─── PROGRESS TRACK (install only) ─── */
+    .progress-track {
+      display: flex; align-items: flex-start; gap: 0;
+      margin-bottom: 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .pt-step {
+      flex: 1; padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .pt-step:last-child { border-right: none; }
+    .pt-num {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand-light));
+      color: #fff; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pt-text { min-width: 0; }
+    .pt-text strong { font-size: 13px; display: block; }
+    .pt-text span { font-size: 11.5px; color: var(--gray); }
+    @media (max-width: 600px) {
+      .progress-track { flex-direction: column; }
+      .pt-step { border-right: none; border-bottom: 1px solid var(--border); }
+      .pt-step:last-child { border-bottom: none; }
+    }
 
     /* ─── STEP CARD ─── */
-    .step-list { display: flex; flex-direction: column; gap: 16px; }
+    .step-list { display: flex; flex-direction: column; gap: 14px; }
     .step-card {
       background: var(--card);
       border-radius: var(--r-xl);
       border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
     }
     .step-head {
       display: flex; align-items: center; gap: 14px;
-      padding: 20px 24px;
-      border-bottom: 1px solid #f0f0f2;
+      padding: 18px 22px;
+      border-bottom: 1px solid #f0f0f3;
     }
     .step-badge {
-      width: 30px; height: 30px; flex-shrink: 0;
+      width: 28px; height: 28px; flex-shrink: 0;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--brand), var(--brand-light));
-      color: #fff; font-size: 13px; font-weight: 700;
+      color: #fff; font-size: 12px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(232,64,26,.3);
     }
-    .step-title { font-size: 16px; font-weight: 600; }
-    .step-body { padding: 22px 24px; }
-    .step-desc { font-size: 14px; color: var(--mid); margin-bottom: 16px; line-height: 1.7; }
+    .step-title { font-size: 15.5px; font-weight: 600; }
+    .step-body { padding: 20px 22px; }
+    .step-desc {
+      font-size: 14px; color: var(--mid);
+      margin-bottom: 16px; line-height: 1.72;
+    }
 
     /* ─── TERMINAL ─── */
     .terminal {
       background: var(--code-bg);
       border-radius: var(--r-lg);
       overflow: hidden; margin: 12px 0;
-      border: 1px solid rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.05);
     }
     .term-bar {
-      background: #2c2c2e;
-      padding: 9px 14px;
+      background: #27272a;
+      padding: 8px 14px;
       display: flex; align-items: center; gap: 7px;
     }
     .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .d1 { background: #ff5f57; } .d2 { background: #febc2e; } .d3 { background: #28c840; }
-    .term-label { color: #636366; font-size: 11px; margin-left: auto; letter-spacing: .3px; }
+    .term-label { color: #52525b; font-size: 11px; margin-left: auto; letter-spacing: .3px; }
     .term-body {
-      padding: 16px 18px;
+      padding: 14px 18px;
       font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
-      font-size: 13px; line-height: 1.85;
-      color: #e5e5e7;
+      font-size: 13px; line-height: 1.9;
+      color: #e4e4e7;
       overflow-x: auto;
     }
-    .tc { color: #636366; }   /* comment */
-    .tp { color: #64d2ff; }   /* prompt */
-    .tk { color: #bf5af2; }   /* keyword/cmd */
-    .ta { color: #30d158; }   /* arg */
-    .ts { color: #ffd60a; }   /* string */
-    .to { color: #30d158; }   /* output */
-    .ti { color: #64d2ff; }   /* info */
-    .te { color: #ff453a; }   /* error */
+    .tc { color: #52525b; }
+    .tp { color: #60a5fa; }
+    .tk { color: #c084fc; }
+    .ta { color: #4ade80; }
+    .ts { color: #facc15; }
+    .to { color: #4ade80; }
+    .ti { color: #60a5fa; }
+    .te { color: #f87171; }
 
     /* ─── CALLOUT ─── */
     .callout {
-      display: flex; gap: 10px;
+      display: flex; gap: 11px;
       border-radius: var(--r-md); padding: 13px 16px;
       font-size: 13.5px; line-height: 1.65;
       margin: 12px 0;
     }
-    .callout-icon { flex-shrink: 0; font-size: 18px; margin-top: 1px; }
-    .c-info    { background: #f0f7ff; border: 1px solid #b8d8ff; color: #0a3d6b; }
-    .c-warn    { background: #fffbec; border: 1px solid #ffe9a0; color: #5a3800; }
-    .c-success { background: #f0faf4; border: 1px solid #aee8c0; color: #0f4620; }
-    .c-key     { background: var(--brand-bg); border: 1px solid #ffc9b8; color: #7a1e06; }
+    .callout-icon { flex-shrink: 0; font-size: 17px; margin-top: 1px; }
+    .c-info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .c-warn    { background: #fffbeb; border: 1px solid #fde68a; color: #78350f; }
+    .c-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+    .c-key     { background: #fff7ed; border: 1px solid #fdba74; color: #7c2d12; }
+    .c-danger  { background: #fef2f2; border: 1px solid #fecaca; color: #7f1d1d; }
 
     /* ─── CHAT BUBBLES ─── */
     .chat { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
     .brow { display: flex; gap: 8px; align-items: flex-end; }
     .brow.user { flex-direction: row-reverse; }
     .av {
-      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 14px;
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
     }
-    .av-ai { background: linear-gradient(135deg, var(--brand), var(--brand-light)); color: #fff; font-weight: 700; font-size: 12px; }
-    .av-user { background: #e5e5ea; }
+    .av-ai   { background: linear-gradient(135deg, var(--brand), var(--brand-light)); color: #fff; font-weight: 700; font-size: 11px; }
+    .av-user { background: #e4e4e7; color: #52525b; }
     .bubble {
-      max-width: 76%; padding: 10px 14px;
-      border-radius: 16px; font-size: 13.5px; line-height: 1.6;
+      max-width: 78%; padding: 10px 14px;
+      border-radius: 16px; font-size: 13.5px; line-height: 1.62;
     }
-    .b-ai   { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-    .b-user { background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
+    .b-ai   { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; box-shadow: var(--shadow-sm); }
+    .b-user { background: linear-gradient(135deg, var(--brand), var(--brand-light)); color: #fff; border-bottom-right-radius: 4px; }
     .bubble code {
       background: rgba(0,0,0,.07); padding: 1px 5px;
       border-radius: 4px; font-family: monospace; font-size: 12px;
     }
     .b-user code { background: rgba(255,255,255,.2); }
 
-    /* ─── CTA BUTTON ─── */
+    /* ─── BUTTONS ─── */
     .btn {
       display: inline-flex; align-items: center; gap: 7px;
       padding: 10px 22px; border-radius: 50px;
       font-size: 14px; font-weight: 600; text-decoration: none;
-      transition: transform .18s, box-shadow .18s;
-      cursor: pointer; border: none;
+      transition: transform .16s, box-shadow .16s, opacity .16s;
+      cursor: pointer; border: none; user-select: none;
     }
     .btn-brand {
       background: linear-gradient(135deg, var(--brand), var(--brand-light));
       color: #fff;
-      box-shadow: 0 4px 14px rgba(232,64,26,.32);
+      box-shadow: 0 3px 12px rgba(232,64,26,.28);
     }
-    .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(232,64,26,.42); }
+    .btn-brand:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(232,64,26,.38); }
     .btn-ghost {
       background: transparent;
-      border: 1.5px solid var(--brand); color: var(--brand);
+      border: 1.5px solid rgba(255,255,255,.25); color: rgba(255,255,255,.8);
     }
-    .btn-ghost:hover { background: var(--brand); color: #fff; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.5); color: #fff; }
 
     /* ─── MOCK UI ─── */
     .mock {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-lg); overflow: hidden; margin: 14px 0;
+      box-shadow: var(--shadow-sm);
     }
     .mock-bar {
       background: linear-gradient(90deg, var(--brand) 0%, var(--brand-light) 100%);
-      padding: 10px 16px; color: #fff; font-size: 13px; font-weight: 600;
+      padding: 9px 16px; color: #fff; font-size: 12.5px; font-weight: 600;
     }
     .mock-body { padding: 16px; }
 
@@ -254,8 +316,8 @@
     .ri {
       width: 100%; aspect-ratio: 4/3;
       display: flex; align-items: center; justify-content: center;
-      font-size: 30px;
-      background: linear-gradient(135deg, #fff5f2 0%, #ffe8df 100%);
+      font-size: 28px;
+      background: linear-gradient(135deg, #fff8f5 0%, #ffe8dc 100%);
     }
     .ri-info { padding: 8px 9px; }
     .ri-title { font-size: 11px; font-weight: 500; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
@@ -272,13 +334,13 @@
       background: linear-gradient(135deg, #2c1a3e 0%, #1a2840 100%);
       aspect-ratio: 1;
       display: flex; align-items: center; justify-content: center;
-      font-size: 46px; position: relative; overflow: hidden;
+      font-size: 44px; position: relative; overflow: hidden;
     }
     .ai-card-label {
       position: absolute; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,.7));
+      background: linear-gradient(transparent, rgba(0,0,0,.65));
       padding: 18px 10px 8px;
-      color: rgba(255,255,255,.8); font-size: 11px;
+      color: rgba(255,255,255,.75); font-size: 11px;
     }
 
     /* ─── SCENARIO GRID ─── */
@@ -288,76 +350,73 @@
       background: var(--card);
       border-radius: var(--r-xl); overflow: hidden;
       border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .18s, transform .18s;
     }
+    .sc:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
     .sc-head {
       padding: 16px 18px;
-      background: linear-gradient(135deg, #fff6f3 0%, #fff0e8 100%);
-      border-bottom: 1px solid #ffd6c8;
+      background: linear-gradient(135deg, #fff8f5 0%, #fff2ec 100%);
+      border-bottom: 1px solid #ffe4d8;
     }
-    .sc-icon  { font-size: 26px; margin-bottom: 6px; }
-    .sc-name  { font-size: 15px; font-weight: 700; }
-    .sc-desc  { font-size: 12.5px; color: var(--gray); margin-top: 3px; }
+    .sc-icon  { font-size: 24px; margin-bottom: 7px; }
+    .sc-name  { font-size: 14.5px; font-weight: 700; }
+    .sc-desc  { font-size: 12px; color: var(--gray); margin-top: 3px; }
     .sc-body  { padding: 14px 18px; }
     .sc-cmd {
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--r-sm);
-      padding: 9px 12px; font-family: monospace;
-      font-size: 12px; color: var(--mid);
-      word-break: break-all; margin: 7px 0;
+      padding: 9px 12px; font-size: 13px;
+      color: var(--mid); word-break: break-all; margin: 7px 0;
+      font-style: italic;
     }
-    .sc-tip { font-size: 12px; color: var(--gray); margin-top: 7px; }
+    .sc-cmd::before { content: '"'; color: var(--brand); }
+    .sc-cmd::after  { content: '"'; color: var(--brand); }
+    .sc-tip { font-size: 12px; color: var(--gray); margin-top: 8px; line-height: 1.6; }
 
     /* ─── TABLE ─── */
     .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
     .tbl th {
       background: var(--bg); padding: 10px 14px;
-      text-align: left; font-size: 11.5px; font-weight: 600;
-      color: var(--gray); text-transform: uppercase; letter-spacing: .4px;
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: var(--gray); text-transform: uppercase; letter-spacing: .5px;
       border-bottom: 1px solid var(--border);
     }
-    .tbl td { padding: 11px 14px; border-bottom: 1px solid #f0f0f2; vertical-align: top; }
+    .tbl td { padding: 11px 14px; border-bottom: 1px solid #f0f0f3; vertical-align: top; line-height: 1.6; }
     .tbl tr:last-child td { border-bottom: none; }
+    .tbl tr:hover td { background: #fafafa; }
     .param { font-family: monospace; color: var(--brand); font-size: 12px; background: var(--brand-bg); padding: 2px 7px; border-radius: 4px; }
-    .opt   { font-size: 11px; color: var(--gray); }
+    .opt   { display: inline-block; font-size: 10px; color: var(--gray); background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; margin-left: 4px; vertical-align: middle; }
+    .req   { display: inline-block; font-size: 10px; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-radius: 3px; padding: 0 5px; margin-left: 4px; vertical-align: middle; }
 
     /* ─── TAG LIST ─── */
     .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
     .tag {
-      padding: 5px 13px; border-radius: 50px;
+      padding: 6px 14px; border-radius: 50px;
       font-size: 12.5px; font-weight: 500;
       background: var(--bg); color: var(--gray);
       border: 1px solid var(--border);
+      transition: all .15s;
     }
+    .tag:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-bg); }
     .tag-r { background: var(--brand-bg); color: var(--brand); border-color: #ffc4b2; }
-    .tag-b { background: #f0f4ff; color: #2c5fe0; border-color: #c8d5ff; }
-    .tag-g { background: #f0fff4; color: #1a7a2a; border-color: #b4e5bf; }
+    .tag-b { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .tag-g { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
 
-    /* ─── CONFIG JSON ─── */
-    .cfg {
-      background: #f8f8fa; border: 1px solid var(--border);
-      border-radius: var(--r-md); padding: 14px 16px;
-      font-family: monospace; font-size: 13px; line-height: 1.75; margin: 10px 0;
-    }
-    .ck { color: #0070c9; } .cv { color: #1a7a2a; } .cc { color: #999; }
-
-    /* ── DIVIDER ── */
-    .hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
-
-    /* ─── INSTALL SECTION ─── */
-    /* Tool tabs */
-    .tools-note { font-size: 13px; color: var(--gray); margin-bottom: 12px; }
+    /* ─── TOOL TABS ─── */
+    .tools-note { font-size: 13px; color: var(--gray); margin-bottom: 14px; }
     .tool-tabs  { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .tt {
       display: flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 50px;
+      padding: 7px 16px; border-radius: 50px;
       border: 1.5px solid var(--border); background: var(--card);
       cursor: pointer; font-size: 13px; font-weight: 500;
-      color: var(--gray); transition: all .16s; user-select: none;
+      color: var(--gray); transition: all .15s; user-select: none;
     }
     .tt:hover { border-color: var(--brand); color: var(--brand); }
     .tt.active { border-color: var(--brand); background: var(--brand-bg); color: var(--brand); font-weight: 600; }
-    .tt-emoji { font-size: 15px; }
+    .tt-emoji { font-size: 14px; }
 
     /* Install panels */
     .ipanel { display: none; }
@@ -366,15 +425,16 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-xl); overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
     .ipanel-head {
       padding: 16px 22px;
-      border-bottom: 1px solid #f0f0f2;
+      border-bottom: 1px solid #f0f0f3;
       display: flex; align-items: center; gap: 12px;
       background: var(--bg);
     }
     .iph-icon {
-      width: 36px; height: 36px; border-radius: 9px;
+      width: 38px; height: 38px; border-radius: 10px;
       background: var(--brand-bg);
       display: flex; align-items: center; justify-content: center;
       font-size: 18px; flex-shrink: 0;
@@ -383,22 +443,40 @@
     .iph-sub   { font-size: 12px; color: var(--gray); margin-top: 1px; }
 
     .ipanel-body { padding: 22px; }
-    .ipanel-step { display: flex; gap: 12px; margin-bottom: 18px; }
+    .ipanel-step { display: flex; gap: 12px; margin-bottom: 20px; }
     .ipanel-step:last-child { margin-bottom: 0; }
     .ips-num {
       width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
       background: var(--brand-dim); color: var(--brand);
-      font-size: 12px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+      font-size: 11.5px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; margin-top: 2px;
     }
-    .ips-body h5 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-    .ips-body p  { font-size: 13px; color: var(--mid); margin-bottom: 7px; }
+    .ips-body h5 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .ips-body p  { font-size: 13px; color: var(--mid); margin-bottom: 7px; line-height: 1.65; }
 
     /* Mode toggle */
-    .mode-row { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; margin-bottom: 12px; }
+    .mode-row { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; margin-bottom: 14px; }
     .mb { padding: 6px 15px; font-size: 12.5px; font-weight: 500; background: none; border: none; cursor: pointer; color: var(--gray); transition: all .15s; }
     .mb:not(:last-child) { border-right: 1.5px solid var(--border); }
+    .mb:hover:not(.disabled):not(.active) { background: var(--bg); color: var(--dark); }
     .mb.active { background: var(--brand); color: #fff; }
+    .mb.disabled {
+      opacity: .4; cursor: not-allowed; background: var(--bg); color: var(--gray);
+      position: relative;
+    }
+    .mb.disabled::after {
+      content: '即将上线';
+      position: absolute; top: -26px; left: 50%; transform: translateX(-50%);
+      background: #1c1c1e; color: #fff; font-size: 10px;
+      padding: 3px 8px; border-radius: 5px; white-space: nowrap;
+      pointer-events: none; opacity: 0; transition: opacity .15s;
+    }
+    .mb.disabled:hover::after { opacity: 1; }
+    .npm-badge {
+      display: inline-block; font-size: 9px; font-weight: 600;
+      background: #e4e4e7; color: #71717a; border-radius: 4px;
+      padding: 1px 5px; margin-left: 4px; vertical-align: middle;
+    }
     .imode { display: none; }
     .imode.active { display: block; }
 
@@ -406,66 +484,92 @@
     .codeblock {
       background: var(--code-bg);
       border-radius: var(--r-md); overflow: hidden; margin: 6px 0;
-      border: 1px solid rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
     }
     .cb-head {
       display: flex; align-items: center; justify-content: space-between;
       padding: 7px 12px;
       background: rgba(255,255,255,.04);
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.05);
     }
-    .cb-lang { font-size: 11px; color: rgba(255,255,255,.35); font-family: monospace; text-transform: uppercase; letter-spacing: .4px; }
+    .cb-lang { font-size: 11px; color: rgba(255,255,255,.3); font-family: monospace; text-transform: uppercase; letter-spacing: .5px; }
     .cb-copy {
       font-size: 11px; color: rgba(255,255,255,.4);
-      background: none; border: 1px solid rgba(255,255,255,.12);
-      border-radius: 4px; padding: 2px 8px; cursor: pointer; transition: all .14s;
+      background: none; border: 1px solid rgba(255,255,255,.1);
+      border-radius: 4px; padding: 2px 9px; cursor: pointer; transition: all .14s;
     }
-    .cb-copy:hover { background: rgba(255,255,255,.1); color: #fff; }
-    .cb-copy.ok { color: #30d158; border-color: #30d158; }
+    .cb-copy:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .cb-copy.ok { color: #4ade80; border-color: #4ade80; }
     pre {
       padding: 13px 15px; margin: 0;
       font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
-      font-size: 13px; line-height: 1.75; color: #e5e5e7; overflow-x: auto;
+      font-size: 13px; line-height: 1.78; color: #e4e4e7; overflow-x: auto;
     }
-    .xc { color: #636366; }  /* comment */
-    .xk { color: #bf5af2; }  /* cmd */
-    .xs { color: #ffd60a; }  /* string */
-    .xo { color: #64d2ff; }  /* option */
-    .xp { color: #ff9f0a; }  /* path */
+    .xc { color: #52525b; }
+    .xk { color: #c084fc; }
+    .xs { color: #facc15; }
+    .xo { color: #60a5fa; }
+    .xp { color: #fb923c; }
 
-    /* tip */
+    /* inline tip */
     .tip {
       display: flex; gap: 8px;
-      background: #f0f7ff; border: 1px solid #b8d8ff;
+      background: #eff6ff; border: 1px solid #bfdbfe;
       border-radius: var(--r-sm); padding: 9px 13px;
-      font-size: 12.5px; color: #0a3d6b; margin-top: 9px;
+      font-size: 12.5px; color: #1e40af; margin-top: 10px; line-height: 1.6;
     }
     .tip-icon { flex-shrink: 0; }
 
     /* ─── DOWNLOAD CARD ─── */
     .dl-card {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #fff8f5 0%, #fff4f0 100%);
+      border: 1.5px solid #ffd4c2;
       border-radius: var(--r-xl); padding: 20px 22px;
       display: flex; align-items: center; gap: 18px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
     }
     .dl-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: var(--brand-bg);
+      width: 50px; height: 50px; border-radius: 14px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(232,64,26,.15);
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; flex-shrink: 0;
     }
     .dl-info { flex: 1; }
-    .dl-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-    .dl-info p  { font-size: 12.5px; color: var(--gray); }
-    .dl-url { font-size: 11.5px; color: var(--brand); font-family: monospace; margin-top: 3px; word-break: break-all; }
+    .dl-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .dl-info p  { font-size: 12.5px; color: var(--gray); line-height: 1.55; }
+    .dl-url { font-size: 11px; color: var(--brand); font-family: monospace; margin-top: 4px; word-break: break-all; opacity: .8; }
+
+    /* ─── CONFIG STEPS ─── */
+    .config-steps { display: flex; flex-direction: column; gap: 18px; }
+    .cs {
+      display: flex; gap: 14px;
+      padding: 16px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+    }
+    .cs-num {
+      width: 24px; height: 24px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .cs-body { flex: 1; min-width: 0; }
+    .cs-body h5 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+
+    /* ─── DIVIDER ── */
+    .hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
 
     /* ─── FOOTER ─── */
     footer {
       text-align: center; padding: 28px 20px;
-      font-size: 12.5px; color: var(--gray);
+      font-size: 12px; color: var(--gray);
       border-top: 1px solid var(--border);
+      background: var(--card);
     }
     footer a { color: var(--brand); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
@@ -475,9 +579,11 @@
       .sg { grid-template-columns: 1fr; }
       .rg { grid-template-columns: repeat(2,1fr); }
       .ai-grid { grid-template-columns: 1fr 1fr; }
-      .hero h1 { font-size: 34px; }
-      .step-body { padding: 18px 16px; }
-      .step-head { padding: 16px 18px; }
+      .hero h1 { font-size: 30px; }
+      .step-body { padding: 16px; }
+      .step-head { padding: 14px 16px; }
+      .dl-card { flex-direction: column; text-align: center; }
+      .dl-url { word-break: break-all; }
     }
   </style>
 </head>
@@ -486,15 +592,18 @@
 <!-- ── HERO ── -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow"><span></span> 58pic AI Skill</div>
-    <h1>千图 AI Skill<br>安装与使用教程</h1>
-    <p class="hero-sub">在 AI 工具中直接搜索千图网素材、生成做同款图片，一句话完成创意设计</p>
-    <div class="hero-pills">
-      <div class="pill">🔍 素材搜索</div>
-      <div class="pill">🤖 AI 生成</div>
-      <div class="pill">🎭 做同款</div>
-      <div class="pill">⬇ 一键下载</div>
-      <div class="pill">⚡ Cursor · Claude · Windsurf</div>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>58pic AI Skill · v1.0</div>
+    <h1>把千图网<br>装进你的 <em>AI 工具</em></h1>
+    <p class="hero-sub">搜索百万素材、AI 秒级生图、做同款变体<br>一句自然语言，直接在 Claude / Cursor 里搞定</p>
+    <div class="hero-features">
+      <div class="hf">🔍 关键词 · AI 向量搜索</div>
+      <div class="hf">🎨 文字生图</div>
+      <div class="hf">🪄 做同款</div>
+      <div class="hf">⬇ 一键下载</div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-brand" href="https://github.com/58pic-open/skills" target="_blank">🐙 GitHub 在线安装</a>
+      <a class="btn btn-ghost" href="https://preview.58pic.com/AI/SKILLS/58pic.zip" download>⬇ 下载 zip 包</a>
     </div>
   </div>
 </div>
@@ -502,61 +611,102 @@
 <!-- ── NAV ── -->
 <nav class="nav">
   <div class="nav-inner">
-    <div class="nav-item active" onclick="switchTab('install')">📦 安装配置</div>
-    <div class="nav-item" onclick="switchTab('start')">🚀 快速开始</div>
-    <div class="nav-item" onclick="switchTab('search')">🔍 素材搜索</div>
-    <div class="nav-item" onclick="switchTab('ai')">🤖 AI 生成</div>
-    <div class="nav-item" onclick="switchTab('tonekuan')">🎭 做同款</div>
-    <div class="nav-item" onclick="switchTab('reference')">📖 命令参考</div>
+    <div class="nav-item active" onclick="switchTab('install',this)">📦 安装</div>
+    <div class="nav-item" onclick="switchTab('start',this)">🚀 快速上手</div>
+    <div class="nav-item" onclick="switchTab('search',this)">🔍 搜索素材</div>
+    <div class="nav-item" onclick="switchTab('ai',this)">🎨 AI 生图</div>
+    <div class="nav-item" onclick="switchTab('tonekuan',this)">🪄 做同款</div>
+    <div class="nav-item" onclick="switchTab('reference',this)">📖 参数文档</div>
   </div>
 </nav>
 
 <div class="main">
 
   <!-- ═══════════════════════════════════
-       TAB 0 · 安装配置
+       TAB 0 · 安装
   ════════════════════════════════════ -->
   <div class="section active" id="tab-install">
     <div class="sec-head">
-      <h2>📦 安装配置</h2>
-      <p>下载 Skill 文件包，选择你的 AI 工具，3 步完成安装与配置</p>
+      <h2>安装 Skill</h2>
+      <p>3 步完成安装，全程不超过 5 分钟</p>
     </div>
 
-    <!-- Step A: Download -->
+    <!-- 3-step progress -->
+    <div class="progress-track">
+      <div class="pt-step">
+        <div class="pt-num">1</div>
+        <div class="pt-text">
+          <strong>获取 Skill 包</strong>
+          <span>在线安装 或 下载 zip</span>
+        </div>
+      </div>
+      <div class="pt-step">
+        <div class="pt-num">2</div>
+        <div class="pt-text">
+          <strong>安装到 AI 工具</strong>
+          <span>Claude / Cursor / Windsurf…</span>
+        </div>
+      </div>
+      <div class="pt-step">
+        <div class="pt-num">3</div>
+        <div class="pt-text">
+          <strong>绑定 API Key</strong>
+          <span>一次配置，永久有效</span>
+        </div>
+      </div>
+    </div>
+
     <div class="step-list">
+      <!-- Step 1 -->
       <div class="step-card">
         <div class="step-head">
           <div class="step-badge">1</div>
-          <div class="step-title">下载 Skill 文件包</div>
+          <div class="step-title">获取 Skill 文件包</div>
         </div>
         <div class="step-body">
-          <p class="step-desc">下载千图 AI Skill 安装包，包含素材搜索、预览、下载、AI 做同款等全套脚本。</p>
-          <div class="dl-card">
+          <p class="step-desc">选择你偏好的获取方式。在线安装会直接从 GitHub 拉取最新代码，无需手动下载；离线包适合网络受限的环境。</p>
+
+          <!-- 在线安装（推荐） -->
+          <div class="dl-card" style="border-color:#bbf7d0;background:linear-gradient(135deg,#f0fdf4,#ecfdf5)">
+            <div class="dl-icon" style="background:#fff">🐙</div>
+            <div class="dl-info">
+              <h4 style="display:flex;align-items:center;gap:8px">
+                在线安装
+                <span style="font-size:10px;font-weight:600;background:linear-gradient(135deg,var(--brand),var(--brand-light));color:#fff;padding:2px 8px;border-radius:50px;letter-spacing:.3px">推荐</span>
+              </h4>
+              <p style="color:#166534">始终获取最新版本，仓库地址：</p>
+              <div class="dl-url" style="color:#15803d">https://github.com/58pic-open/skills</div>
+            </div>
+            <a class="btn btn-brand" href="https://github.com/58pic-open/skills" target="_blank" style="white-space:nowrap">🐙 查看仓库</a>
+          </div>
+
+          <!-- zip 离线包 -->
+          <div class="dl-card" style="margin-top:0">
             <div class="dl-icon">📦</div>
             <div class="dl-info">
-              <h4>58pic.zip</h4>
-              <p>包含全套脚本及配置，适用于所有 AI 工具</p>
+              <h4>离线安装包</h4>
+              <p>下载 zip 解压后本地安装，适合网络受限环境</p>
               <div class="dl-url">https://preview.58pic.com/AI/SKILLS/58pic.zip</div>
             </div>
-            <a class="btn btn-brand" href="https://preview.58pic.com/AI/SKILLS/58pic.zip" download>⬇ 下载</a>
+            <a class="btn" href="https://preview.58pic.com/AI/SKILLS/58pic.zip" download style="background:var(--bg);border:1.5px solid var(--border);color:var(--mid);white-space:nowrap">⬇ 下载 zip</a>
           </div>
         </div>
       </div>
 
-      <!-- Step B: Tool select + install -->
+      <!-- Step 2 -->
       <div class="step-card">
         <div class="step-head">
           <div class="step-badge">2</div>
-          <div class="step-title">选择 AI 工具 · 完成安装</div>
+          <div class="step-title">安装到你的 AI 工具</div>
         </div>
         <div class="step-body">
-          <p class="tools-note">选择你正在使用的 AI 编码工具：</p>
+          <p class="tools-note">选择你正在使用的工具：</p>
           <div class="tool-tabs">
-            <div class="tt active" data-tool="claude" onclick="selectTool(this)"><span class="tt-emoji">🤖</span> Claude Code / Cowork</div>
-            <div class="tt" data-tool="cursor"    onclick="selectTool(this)"><span class="tt-emoji">⚡</span> Cursor</div>
-            <div class="tt" data-tool="windsurf"  onclick="selectTool(this)"><span class="tt-emoji">🌊</span> Windsurf</div>
-            <div class="tt" data-tool="continue"  onclick="selectTool(this)"><span class="tt-emoji">🔄</span> Continue</div>
-            <div class="tt" data-tool="vscode"    onclick="selectTool(this)"><span class="tt-emoji">🔵</span> VS Code + Copilot</div>
+            <div class="tt active" data-tool="claude"    onclick="selectTool(this)"><span class="tt-emoji">🤖</span> Claude / Cowork</div>
+            <div class="tt"        data-tool="cursor"    onclick="selectTool(this)"><span class="tt-emoji">⚡</span> Cursor</div>
+            <div class="tt"        data-tool="windsurf"  onclick="selectTool(this)"><span class="tt-emoji">🌊</span> Windsurf</div>
+            <div class="tt"        data-tool="continue"  onclick="selectTool(this)"><span class="tt-emoji">🔄</span> Continue</div>
+            <div class="tt"        data-tool="vscode"    onclick="selectTool(this)"><span class="tt-emoji">🔵</span> VS Code + Copilot</div>
           </div>
 
           <!-- Claude -->
@@ -564,7 +714,10 @@
             <div class="ipanel-card">
               <div class="ipanel-head">
                 <div class="iph-icon">🤖</div>
-                <div><div class="iph-title">Claude Code / Cowork</div><div class="iph-sub">Anthropic 官方 AI 工具 · Skills 原生支持</div></div>
+                <div>
+                  <div class="iph-title">Claude Code / Cowork</div>
+                  <div class="iph-sub">Anthropic 官方工具 · 原生支持 Skills</div>
+                </div>
               </div>
               <div class="ipanel-body">
                 <div class="ipanel-step">
@@ -572,45 +725,51 @@
                   <div class="ips-body">
                     <h5>选择安装方式</h5>
                     <div class="mode-row">
-                      <button class="mb active" onclick="setMode('claude','online',this)">🌐 在线安装</button>
-                      <button class="mb"        onclick="setMode('claude','local',this)">📁 本地安装</button>
+                      <button class="mb disabled" disabled>📦 npm<span class="npm-badge">即将上线</span></button>
+                      <button class="mb active" onclick="setMode('claude','github',this)">🐙 GitHub（推荐）</button>
+                      <button class="mb" onclick="setMode('claude','local',this)">📁 本地安装</button>
                     </div>
-                    <div class="imode active" id="claude-online">
-                      <p>推荐：直接从 npm 安装（最新版本）：</p>
+
+                    <div class="imode" id="claude-npm">
+                      <p>从 npm 注册表安装，自动获取最新版：</p>
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">@58pic/skill</span></pre>
                       </div>
-                      <p style="margin-top:10px;font-size:13px;color:var(--mid)">也可从 GitHub 安装：</p>
+                    </div>
+
+                    <div class="imode active" id="claude-github">
+                      <p>直接从 <a href="https://github.com/58pic-open/skills" target="_blank" style="color:var(--brand);text-decoration:none">github.com/58pic-open/skills</a> 拉取，始终获取最新版本：</p>
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">github:58pic-open/skills#path=58pic</span></pre>
                       </div>
+                      <div class="tip"><span class="tip-icon">💡</span><span>无需提前下载任何文件，命令会自动从 GitHub 拉取最新代码并完成安装。</span></div>
                     </div>
+
                     <div class="imode" id="claude-local">
-                      <p>下载 zip 解压后，指定本地目录路径安装：</p>
+                      <p>解压下载的 zip 后，用本地路径安装：</p>
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                        <pre><span class="xc"># 1. 下载并解压</span>
-curl -L <span class="xs">https://preview.58pic.com/AI/SKILLS/58pic.zip</span> -o 58pic.zip
+                        <pre><span class="xc"># 解压文件包</span>
 unzip 58pic.zip <span class="xo">-d</span> ./58pic
 
-<span class="xc"># 2. 本地路径安装（目录需含 SKILL.md + package.json）</span>
+<span class="xc"># 从本地目录安装</span>
 <span class="xk">npx</span> skills add <span class="xp">./58pic</span></pre>
                       </div>
-                      <div class="tip"><span class="tip-icon">💡</span><span>本地目录需包含 <code>SKILL.md</code> 和 <code>package.json</code>，工具会自动读取 skill 元数据。</span></div>
+                      <div class="tip"><span class="tip-icon">💡</span><span>本地目录需包含 <code>SKILL.md</code> 和 <code>package.json</code>，工具会自动识别 Skill 包结构。</span></div>
                     </div>
                   </div>
                 </div>
                 <div class="ipanel-step">
                   <div class="ips-num">②</div>
                   <div class="ips-body">
-                    <h5>验证安装</h5>
+                    <h5>确认安装成功</h5>
                     <div class="codeblock">
                       <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                       <pre><span class="xk">npx</span> skills list</pre>
                     </div>
-                    <p style="margin-top:7px;font-size:13px;color:var(--mid)">列表中出现 <code style="font-family:monospace;background:var(--bg);padding:1px 5px;border-radius:4px">58pic</code> 即安装成功 ✅</p>
+                    <p style="margin-top:8px">列表里看到 <code style="font-family:monospace;background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">58pic</code> 就说明安装成功 ✅</p>
                   </div>
                 </div>
               </div>
@@ -622,7 +781,10 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             <div class="ipanel-card">
               <div class="ipanel-head">
                 <div class="iph-icon">⚡</div>
-                <div><div class="iph-title">Cursor</div><div class="iph-sub">AI 代码编辑器 · 支持 MCP 工具集成</div></div>
+                <div>
+                  <div class="iph-title">Cursor</div>
+                  <div class="iph-sub">AI 代码编辑器 · 支持 MCP 工具集成</div>
+                </div>
               </div>
               <div class="ipanel-body">
                 <div class="ipanel-step">
@@ -630,15 +792,18 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-body">
                     <h5>选择安装方式</h5>
                     <div class="mode-row">
-                      <button class="mb active" onclick="setMode('cursor','online',this)">🌐 在线安装</button>
-                      <button class="mb"        onclick="setMode('cursor','local',this)">📁 本地安装</button>
+                      <button class="mb disabled" disabled>📦 npm<span class="npm-badge">即将上线</span></button>
+                      <button class="mb active" onclick="setMode('cursor','github',this)">🐙 GitHub（推荐）</button>
+                      <button class="mb" onclick="setMode('cursor','local',this)">📁 本地安装</button>
                     </div>
-                    <div class="imode active" id="cursor-online">
+                    <div class="imode" id="cursor-npm">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">@58pic/skill</span> <span class="xo">--tool</span> cursor</pre>
                       </div>
-                      <p style="margin-top:10px;font-size:13px;color:var(--mid)">也可从 GitHub 安装：</p>
+                    </div>
+                    <div class="imode active" id="cursor-github">
+                      <p style="font-size:13px;color:var(--mid);margin-bottom:8px">从 <a href="https://github.com/58pic-open/skills" target="_blank" style="color:var(--brand);text-decoration:none">github.com/58pic-open/skills</a> 拉取，始终获取最新版本：</p>
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">github:58pic-open/skills#path=58pic</span> <span class="xo">--tool</span> cursor</pre>
@@ -647,8 +812,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                     <div class="imode" id="cursor-local">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                        <pre>curl -L <span class="xs">https://preview.58pic.com/AI/SKILLS/58pic.zip</span> -o 58pic.zip
-unzip 58pic.zip <span class="xo">-d</span> ./58pic
+                        <pre>unzip 58pic.zip <span class="xo">-d</span> ./58pic
 <span class="xk">npx</span> skills add <span class="xp">./58pic</span> <span class="xo">--tool</span> cursor</pre>
                       </div>
                     </div>
@@ -658,7 +822,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-num">②</div>
                   <div class="ips-body">
                     <h5>在 Cursor 中启用</h5>
-                    <p>打开 Cursor 设置 → <strong>MCP Tools</strong>，确认 <code>58pic</code> 已出现并处于启用状态。在对话中输入 <code>@58pic 搜索圣诞素材</code> 即可调用。</p>
+                    <p>打开 <strong>设置 → MCP Tools</strong>，确认 <code>58pic</code> 已出现并处于启用状态。在对话中输入 <code>@58pic 搜索圣诞素材</code> 即可调用。</p>
                   </div>
                 </div>
               </div>
@@ -670,7 +834,10 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             <div class="ipanel-card">
               <div class="ipanel-head">
                 <div class="iph-icon">🌊</div>
-                <div><div class="iph-title">Windsurf（Codeium）</div><div class="iph-sub">AI 代码编辑器 · 支持 MCP 插件</div></div>
+                <div>
+                  <div class="iph-title">Windsurf（Codeium）</div>
+                  <div class="iph-sub">AI 代码编辑器 · 支持 MCP 插件</div>
+                </div>
               </div>
               <div class="ipanel-body">
                 <div class="ipanel-step">
@@ -678,20 +845,27 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-body">
                     <h5>选择安装方式</h5>
                     <div class="mode-row">
-                      <button class="mb active" onclick="setMode('windsurf','online',this)">🌐 在线安装</button>
-                      <button class="mb"        onclick="setMode('windsurf','local',this)">📁 本地安装</button>
+                      <button class="mb disabled" disabled>📦 npm<span class="npm-badge">即将上线</span></button>
+                      <button class="mb active" onclick="setMode('windsurf','github',this)">🐙 GitHub（推荐）</button>
+                      <button class="mb" onclick="setMode('windsurf','local',this)">📁 本地安装</button>
                     </div>
-                    <div class="imode active" id="windsurf-online">
+                    <div class="imode" id="windsurf-npm">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">@58pic/skill</span> <span class="xo">--tool</span> windsurf</pre>
                       </div>
                     </div>
+                    <div class="imode active" id="windsurf-github">
+                      <p style="font-size:13px;color:var(--mid);margin-bottom:8px">从 <a href="https://github.com/58pic-open/skills" target="_blank" style="color:var(--brand);text-decoration:none">github.com/58pic-open/skills</a> 拉取，始终获取最新版本：</p>
+                      <div class="codeblock">
+                        <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
+                        <pre><span class="xk">npx</span> skills add <span class="xs">github:58pic-open/skills#path=58pic</span> <span class="xo">--tool</span> windsurf</pre>
+                      </div>
+                    </div>
                     <div class="imode" id="windsurf-local">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                        <pre>curl -L <span class="xs">https://preview.58pic.com/AI/SKILLS/58pic.zip</span> -o 58pic.zip
-unzip 58pic.zip <span class="xo">-d</span> ./58pic
+                        <pre>unzip 58pic.zip <span class="xo">-d</span> ./58pic
 <span class="xk">npx</span> skills add <span class="xp">./58pic</span> <span class="xo">--tool</span> windsurf</pre>
                       </div>
                     </div>
@@ -713,7 +887,10 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             <div class="ipanel-card">
               <div class="ipanel-head">
                 <div class="iph-icon">🔄</div>
-                <div><div class="iph-title">Continue</div><div class="iph-sub">VS Code / JetBrains 插件 · 开源 AI 助手</div></div>
+                <div>
+                  <div class="iph-title">Continue</div>
+                  <div class="iph-sub">VS Code / JetBrains 插件 · 开源 AI 助手</div>
+                </div>
               </div>
               <div class="ipanel-body">
                 <div class="ipanel-step">
@@ -721,20 +898,27 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-body">
                     <h5>选择安装方式</h5>
                     <div class="mode-row">
-                      <button class="mb active" onclick="setMode('continue','online',this)">🌐 在线安装</button>
-                      <button class="mb"        onclick="setMode('continue','local',this)">📁 本地安装</button>
+                      <button class="mb disabled" disabled>📦 npm<span class="npm-badge">即将上线</span></button>
+                      <button class="mb active" onclick="setMode('continue','github',this)">🐙 GitHub（推荐）</button>
+                      <button class="mb" onclick="setMode('continue','local',this)">📁 本地安装</button>
                     </div>
-                    <div class="imode active" id="continue-online">
+                    <div class="imode" id="continue-npm">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">@58pic/skill</span> <span class="xo">--tool</span> continue</pre>
                       </div>
                     </div>
+                    <div class="imode active" id="continue-github">
+                      <p style="font-size:13px;color:var(--mid);margin-bottom:8px">从 <a href="https://github.com/58pic-open/skills" target="_blank" style="color:var(--brand);text-decoration:none">github.com/58pic-open/skills</a> 拉取，始终获取最新版本：</p>
+                      <div class="codeblock">
+                        <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
+                        <pre><span class="xk">npx</span> skills add <span class="xs">github:58pic-open/skills#path=58pic</span> <span class="xo">--tool</span> continue</pre>
+                      </div>
+                    </div>
                     <div class="imode" id="continue-local">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                        <pre>curl -L <span class="xs">https://preview.58pic.com/AI/SKILLS/58pic.zip</span> -o 58pic.zip
-unzip 58pic.zip <span class="xo">-d</span> ./58pic
+                        <pre>unzip 58pic.zip <span class="xo">-d</span> ./58pic
 <span class="xk">npx</span> skills add <span class="xp">./58pic</span> <span class="xo">--tool</span> continue</pre>
                       </div>
                     </div>
@@ -756,7 +940,10 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             <div class="ipanel-card">
               <div class="ipanel-head">
                 <div class="iph-icon">🔵</div>
-                <div><div class="iph-title">VS Code + GitHub Copilot</div><div class="iph-sub">Visual Studio Code · Copilot Chat 扩展</div></div>
+                <div>
+                  <div class="iph-title">VS Code + GitHub Copilot</div>
+                  <div class="iph-sub">Visual Studio Code · Copilot Chat 扩展</div>
+                </div>
               </div>
               <div class="ipanel-body">
                 <div class="ipanel-step">
@@ -764,20 +951,27 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-body">
                     <h5>选择安装方式</h5>
                     <div class="mode-row">
-                      <button class="mb active" onclick="setMode('vscode','online',this)">🌐 在线安装</button>
-                      <button class="mb"        onclick="setMode('vscode','local',this)">📁 本地安装</button>
+                      <button class="mb disabled" disabled>📦 npm<span class="npm-badge">即将上线</span></button>
+                      <button class="mb active" onclick="setMode('vscode','github',this)">🐙 GitHub（推荐）</button>
+                      <button class="mb" onclick="setMode('vscode','local',this)">📁 本地安装</button>
                     </div>
-                    <div class="imode active" id="vscode-online">
+                    <div class="imode" id="vscode-npm">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
                         <pre><span class="xk">npx</span> skills add <span class="xs">@58pic/skill</span> <span class="xo">--tool</span> vscode</pre>
                       </div>
                     </div>
+                    <div class="imode active" id="vscode-github">
+                      <p style="font-size:13px;color:var(--mid);margin-bottom:8px">从 <a href="https://github.com/58pic-open/skills" target="_blank" style="color:var(--brand);text-decoration:none">github.com/58pic-open/skills</a> 拉取，始终获取最新版本：</p>
+                      <div class="codeblock">
+                        <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
+                        <pre><span class="xk">npx</span> skills add <span class="xs">github:58pic-open/skills#path=58pic</span> <span class="xo">--tool</span> vscode</pre>
+                      </div>
+                    </div>
                     <div class="imode" id="vscode-local">
                       <div class="codeblock">
                         <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                        <pre>curl -L <span class="xs">https://preview.58pic.com/AI/SKILLS/58pic.zip</span> -o 58pic.zip
-unzip 58pic.zip <span class="xo">-d</span> ./58pic
+                        <pre>unzip 58pic.zip <span class="xo">-d</span> ./58pic
 <span class="xk">npx</span> skills add <span class="xp">./58pic</span> <span class="xo">--tool</span> vscode</pre>
                       </div>
                     </div>
@@ -787,7 +981,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                   <div class="ips-num">②</div>
                   <div class="ips-body">
                     <h5>在 Copilot Chat 中使用</h5>
-                    <p>安装后，Copilot Chat 输入 <code>@58pic</code> 即可访问千图网 AI 功能。</p>
+                    <p>安装完成后，Copilot Chat 中输入 <code>@58pic</code> 即可访问千图网 AI 功能。</p>
                   </div>
                 </div>
               </div>
@@ -796,41 +990,50 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
         </div>
       </div>
 
-      <!-- Step C: API Key -->
+      <!-- Step 3 -->
       <div class="step-card">
         <div class="step-head">
           <div class="step-badge">3</div>
-          <div class="step-title">配置 API Key</div>
+          <div class="step-title">绑定 API Key</div>
         </div>
         <div class="step-body">
-          <p class="step-desc">安装完成后，需绑定千图网 API Key 才能开始使用。</p>
+          <p class="step-desc">安装完成后，绑定你的千图网 API Key 才能开始使用。只需配置一次，永久有效。</p>
 
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <!-- get key -->
-            <div>
-              <div style="font-size:14px;font-weight:600;margin-bottom:6px">① 获取 API Key</div>
-              <p class="step-desc" style="margin-bottom:10px">访问千图 AI 开放平台，点击「新建令牌」创建：</p>
-              <a class="btn btn-brand" href="https://ai.58pic.com/history?openHistory=1&historyType=5" target="_blank">🔗 前往创建 API Key</a>
-              <div class="callout c-key" style="margin-top:12px">
-                <div class="callout-icon">🔑</div>
-                <div>API Key 格式：<code style="font-family:monospace;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px">sk_xxxxxxxxxxxxxxxx</code><br>仅在创建时显示一次，请<strong>立即复制保存</strong>！</div>
+          <div class="config-steps">
+            <div class="cs">
+              <div class="cs-num">①</div>
+              <div class="cs-body">
+                <h5>获取 API Key</h5>
+                <p class="step-desc" style="margin-bottom:10px">访问千图 AI 开放平台，点击「新建令牌」创建你的专属 Key。</p>
+                <a class="btn btn-brand" href="https://ai.58pic.com/history?openHistory=1&historyType=5" target="_blank" style="font-size:13px;padding:8px 18px">🔗 前往创建 API Key</a>
+                <div class="callout c-key" style="margin-top:12px">
+                  <div class="callout-icon">🔑</div>
+                  <div>API Key 格式：<code style="font-family:monospace;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:4px">sk_xxxxxxxxxxxxxxxx</code><br>
+                  <strong>只显示一次</strong> — 创建后请立即复制，关闭弹窗后将无法再次查看。</div>
+                </div>
               </div>
             </div>
-            <!-- bind key -->
-            <div>
-              <div style="font-size:14px;font-weight:600;margin-bottom:6px">② 绑定 API Key</div>
-              <p class="step-desc" style="margin-bottom:8px">在终端运行（将 <code>sk_your_key</code> 替换为实际 Key）：</p>
-              <div class="codeblock">
-                <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
-                <pre>python3 ~/.claude/skills/58pic/scripts/init_config.py <span class="xo">--api-key</span> <span class="xs">sk_your_key</span></pre>
+
+            <div class="cs">
+              <div class="cs-num">②</div>
+              <div class="cs-body">
+                <h5>绑定到本地</h5>
+                <p class="step-desc" style="margin-bottom:8px">在终端运行以下命令（把 <code>sk_your_key</code> 替换成你的真实 Key）：</p>
+                <div class="codeblock">
+                  <div class="cb-head"><span class="cb-lang">bash</span><button class="cb-copy" onclick="cpCode(this)">复制</button></div>
+                  <pre>python3 ~/.claude/skills/58pic/scripts/init_config.py <span class="xo">--api-key</span> <span class="xs">sk_your_key</span></pre>
+                </div>
               </div>
             </div>
-            <!-- verify -->
-            <div>
-              <div style="font-size:14px;font-weight:600;margin-bottom:6px">③ 完成！开始使用</div>
-              <div class="callout c-success">
-                <div class="callout-icon">✅</div>
-                <div>配置保存后<strong>永久有效</strong>，Key 以加密方式存储在本地，不会上传到任何服务器。</div>
+
+            <div class="cs">
+              <div class="cs-num">③</div>
+              <div class="cs-body">
+                <h5>完成！开始使用</h5>
+                <div class="callout c-success" style="margin:0">
+                  <div class="callout-icon">🔒</div>
+                  <div>你的 API Key 已<strong>加密存储在本地</strong>，不会传输到任何服务器。配置保存后永久有效，无需重复设置。</div>
+                </div>
               </div>
             </div>
           </div>
@@ -840,46 +1043,47 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   </div>
 
   <!-- ═══════════════════════════════════
-       TAB 1 · 快速开始
+       TAB 1 · 快速上手
   ════════════════════════════════════ -->
   <div class="section" id="tab-start">
     <div class="sec-head">
-      <h2>🚀 快速开始</h2>
-      <p>安装配置完成后，用自然语言直接告诉 AI 你想做什么</p>
+      <h2>快速上手</h2>
+      <p>安装配置完成后，用一句自然语言告诉 Claude 你想做什么</p>
     </div>
 
     <div class="step-list">
       <div class="step-card">
-        <div class="step-head"><div class="step-badge">1</div><div class="step-title">创建千图 API Key</div></div>
+        <div class="step-head"><div class="step-badge">1</div><div class="step-title">创建 API Key</div></div>
         <div class="step-body">
-          <p class="step-desc">访问千图 AI 开放平台，创建您的专属令牌。Key 仅在创建时展示一次，请及时复制保存。</p>
+          <p class="step-desc">在千图 AI 开放平台创建你的专属令牌。Key 只在创建时完整展示一次，务必即时复制保存。</p>
           <div class="callout c-key">
             <div class="callout-icon">🔑</div>
-            <div>API Key 格式：<code style="font-family:monospace;background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px">sk_xxxxxxxxxxxxxxxxxxxxxxxx</code><br>创建后<strong>立即复制保存</strong>，关闭弹窗后将无法再次查看完整 Key</div>
+            <div>Key 格式：<code style="font-family:monospace;background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px">sk_xxxxxxxxxxxxxxxxxxxxxxxx</code><br>
+            创建后<strong>立即复制</strong> — 关闭弹窗后将无法再次查看完整 Key</div>
           </div>
-          <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+          <div style="margin-top:16px">
             <a class="btn btn-brand" href="https://ai.58pic.com/history?openHistory=1&historyType=5" target="_blank">🔗 前往创建 API Key</a>
           </div>
           <div class="mock" style="margin-top:20px">
             <div class="mock-bar">千图 AI 开放平台 · 我的令牌</div>
             <div class="mock-body">
-              <div style="display:flex;gap:16px;border-bottom:1px solid #f0f0f0;padding-bottom:12px;margin-bottom:16px;font-size:13px;color:#666">
+              <div style="display:flex;gap:16px;border-bottom:1px solid #f0f0f0;padding-bottom:12px;margin-bottom:16px;font-size:13px;color:#888">
                 <span>历史记录</span><span>我的资产</span><span>我的点赞</span><span>我的项目</span>
-                <span style="font-weight:600;color:#1d1d1f;border-bottom:2px solid #E8401A;padding-bottom:11px;margin-bottom:-13px">我的令牌</span>
+                <span style="font-weight:600;color:#1d1d1f;border-bottom:2px solid var(--brand);padding-bottom:12px;margin-bottom:-13px">我的令牌</span>
               </div>
-              <div style="text-align:center;color:#888;font-size:13px;padding:6px 0 14px;line-height:1.8">
-                用于千图 AI 开放平台调用鉴权。<span style="color:#E8401A">千图 AI 开放平台文档</span>。<br>
-                明文 Key 仅在创建时展示<span style="background:#fff3cd;padding:0 4px;border-radius:3px">一次</span>，请妥善保存。
+              <div style="text-align:center;color:#888;font-size:13px;padding:4px 0 12px;line-height:1.8">
+                用于千图 AI 开放平台调用鉴权。<span style="color:var(--brand)">查看文档</span><br>
+                明文 Key 仅创建时展示<span style="background:#fef3c7;padding:0 4px;border-radius:3px;font-size:12px">一次</span>，请妥善保存。
               </div>
-              <div style="background:#f8f8fa;border-radius:10px;padding:13px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+              <div style="background:#f9f9fb;border-radius:10px;padding:13px 16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
                 <div>
                   <div style="font-weight:600;font-size:14px">我的企业令牌</div>
                   <div style="color:#999;font-size:12px;margin-top:3px;font-family:monospace">sk_404f4329f9641••••••••</div>
                 </div>
-                <span style="background:#e8f4fd;color:#0070c9;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500">企业</span>
+                <span style="background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500">企业</span>
               </div>
-              <div style="text-align:right;margin-top:10px">
-                <span style="display:inline-block;background:linear-gradient(135deg,#E8401A,#FF6B35);color:white;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer">+ 新建令牌</span>
+              <div style="text-align:right;margin-top:8px">
+                <span style="display:inline-block;background:linear-gradient(135deg,var(--brand),var(--brand-light));color:white;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer">+ 新建令牌</span>
               </div>
             </div>
           </div>
@@ -889,38 +1093,43 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
       <div class="step-card">
         <div class="step-head"><div class="step-badge">2</div><div class="step-title">在 Claude 中配置 API Key</div></div>
         <div class="step-body">
-          <p class="step-desc">打开 Claude 对话，直接告诉 Claude 您的 API Key，它会自动帮您保存配置。</p>
+          <p class="step-desc">直接告诉 Claude 你的 API Key，它会自动帮你完成配置。</p>
           <div class="chat">
-            <div class="brow user"><div class="av av-user">👤</div><div class="bubble b-user">我的千图 API Key 是 sk_abc123xxxxx，帮我配置一下</div></div>
-            <div class="brow"><div class="av av-ai">千</div>
+            <div class="brow user">
+              <div class="av av-user">👤</div>
+              <div class="bubble b-user">我的千图 API Key 是 sk_abc123xxxxx，帮我配置一下</div>
+            </div>
+            <div class="brow">
+              <div class="av av-ai">千</div>
               <div class="bubble b-ai">
-                好的！正在为您保存配置...<br><br>
+                好的，正在保存配置...<br><br>
                 ✅ <strong>API Key 已成功保存！</strong><br>
-                配置文件位置：<code>~/.58pic_config.json</code><br><br>
-                您现在可以使用：<br>
-                • 🔍 <strong>搜索素材</strong>：「搜索千图 春节海报」<br>
-                • 🎨 <strong>AI 生成</strong>：「千图 AI 生成一张商务人物」
+                配置文件：<code>~/.58pic_config.json</code><br><br>
+                现在你可以：<br>
+                • 🔍 <strong>搜素材</strong>：「搜索千图 春节海报」<br>
+                • 🎨 <strong>AI 生图</strong>：「千图 AI 生成一张商务人物」
               </div>
             </div>
           </div>
           <div class="callout c-success" style="margin-top:14px">
-            <div class="callout-icon">✅</div>
-            <div>配置保存后<strong>永久有效</strong>，Key 以加密方式存储在本地，不会上传到任何服务器。</div>
+            <div class="callout-icon">🔒</div>
+            <div>API Key 以加密方式存储在本地，<strong>不会传输到任何服务器</strong>。配置永久有效，无需重复设置。</div>
           </div>
         </div>
       </div>
 
       <div class="step-card">
-        <div class="step-head"><div class="step-badge">3</div><div class="step-title">开始使用！</div></div>
+        <div class="step-head"><div class="step-badge">3</div><div class="step-title">开始使用</div></div>
         <div class="step-body">
-          <p class="step-desc">配置完成后，用自然语言告诉 Claude 您想做什么，无需记忆复杂命令。</p>
+          <p class="step-desc">配置完成后，直接用自然语言描述你要做什么，无需记忆命令格式。</p>
+          <div style="margin-bottom:12px;font-size:13px;font-weight:600;color:var(--mid)">试试这些指令：</div>
           <div class="tags">
-            <div class="tag tag-r">「搜索千图 圣诞素材」</div>
-            <div class="tag tag-r">「千图 AI 画一只可爱的熊猫」</div>
-            <div class="tag tag-r">「用 PID 12345 做同款」</div>
-            <div class="tag tag-r">「下载这个素材」</div>
-            <div class="tag tag-b">「千图 AI 生成 16:9 横版海报」</div>
-            <div class="tag tag-b">「换个模型再生成一张」</div>
+            <div class="tag tag-r">搜索千图 圣诞素材</div>
+            <div class="tag tag-r">千图 AI 画一只可爱的熊猫</div>
+            <div class="tag tag-r">用 PID 12345 做同款</div>
+            <div class="tag tag-r">下载这个素材</div>
+            <div class="tag tag-b">千图 AI 生成 16:9 横版海报</div>
+            <div class="tag tag-b">换个模型再生成一张</div>
           </div>
         </div>
       </div>
@@ -928,61 +1137,62 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   </div>
 
   <!-- ═══════════════════════════════════
-       TAB 2 · 素材搜索
+       TAB 2 · 搜索素材
   ════════════════════════════════════ -->
   <div class="section" id="tab-search">
     <div class="sec-head">
-      <h2>🔍 素材搜索</h2>
-      <p>在千图网百万素材库中，用关键词快速找到所需设计资源</p>
+      <h2>搜索素材</h2>
+      <p>在千图网百万素材库里，用关键词或 AI 语义搜索快速找到所需资源</p>
     </div>
 
     <div class="step-list">
       <div class="step-card">
         <div class="step-head"><div class="step-badge">1</div><div class="step-title">发起搜索</div></div>
         <div class="step-body">
-          <p class="step-desc">直接告诉 Claude 您想搜索的内容，支持中文关键词，也可以指定页码和分类。</p>
+          <p class="step-desc">直接告诉 Claude 你想找什么，支持中文关键词，也可以指定分类和页码。</p>
           <div class="chat">
-            <div class="brow user"><div class="av av-user">👤</div><div class="bubble b-user">帮我在千图网搜索「春节海报」</div></div>
-            <div class="brow"><div class="av av-ai">千</div>
+            <div class="brow user">
+              <div class="av av-user">👤</div>
+              <div class="bubble b-user">帮我在千图网搜索「春节海报」</div>
+            </div>
+            <div class="brow">
+              <div class="av av-ai">千</div>
               <div class="bubble b-ai">
-                好的，正在为您搜索「春节海报」...<br><br>
-                🔍 <strong>搜索完成！</strong><br>
-                共找到 <strong>2,847</strong> 条结果，显示第 1 页（20 条）<br><br>
-                部分结果预览：<br>
+                正在搜索「春节海报」...<br><br>
+                🔍 <strong>搜索完成</strong><br>
+                共找到 <strong>2,847</strong> 条结果，第 1 页（20 条）<br><br>
                 <code>PID: 123456789</code> 春节喜庆红色海报模板<br>
                 <code>PID: 987654321</code> 新年贺岁龙年主题海报<br>
                 <code>PID: 456789123</code> 传统中国风春节横幅...<br>
-                <br>[查看全部搜索结果预览] →
+                <br>已生成可视化预览页面 →
               </div>
             </div>
           </div>
           <div class="terminal" style="margin-top:14px">
-            <div class="term-bar"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><span class="term-label">Claude 内部执行</span></div>
+            <div class="term-bar"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><span class="term-label">后台执行</span></div>
             <div class="term-body">
               <span class="tc"># 搜索千图素材</span><br>
               <span class="tp">$</span> <span class="tk">python3</span> <span class="ta">search.py</span> <span class="ts">--keyword "春节海报" --page 1 --limit 20</span><br><br>
               <span class="to">🔍 正在搜索「春节海报」...</span><br>
-              <span class="to">✅ 搜索完成！共找到 2847 条结果，本页 20 条</span><br>
-              <span class="tc">──────────────────────────────────</span><br>
-              <span class="to"> 1. [123456789] 春节喜庆红色海报模板</span><br>
-              <span class="to">      类型: PSD  2480×3508</span><br>
-              <span class="to"> 2. [987654321] 新年贺岁龙年主题海报</span><br>
-              <span class="to">      类型: PSD  1920×1080</span><br>
-              <span class="ti">...</span><br>
-              <span class="to">📁 完整结果已保存至: /tmp/58pic_search_results.json</span>
+              <span class="to">✅ 找到 2847 条结果，当前第 1 页（20 条）</span><br>
+              <span class="tc">─────────────────────────────────</span><br>
+              <span class="to"> 1. [123456789] 春节喜庆红色海报模板 · PSD · 2480×3508</span><br>
+              <span class="to"> 2. [987654321] 新年贺岁龙年主题海报 · PSD · 1920×1080</span><br>
+              <span class="ti">  ...</span><br>
+              <span class="to">📁 完整结果已保存：/tmp/58pic_search_results.json</span>
             </div>
           </div>
         </div>
       </div>
 
       <div class="step-card">
-        <div class="step-head"><div class="step-badge">2</div><div class="step-title">查看搜索结果预览</div></div>
+        <div class="step-head"><div class="step-badge">2</div><div class="step-title">浏览可视化预览</div></div>
         <div class="step-body">
-          <p class="step-desc">搜索完成后，Claude 会生成可视化预览页面，以图片网格形式展示所有素材。</p>
+          <p class="step-desc">搜索完成后，Claude 会生成图片网格预览页，方便你快速浏览和筛选素材。</p>
           <div class="mock">
-            <div class="mock-bar">🔍 搜索结果：春节海报 · 共 2,847 条 · 第 1 页</div>
+            <div class="mock-bar">🔍 春节海报 · 找到 2,847 条 · 第 1 页</div>
             <div class="mock-body">
-              <div style="font-size:12px;color:#7a5800;background:#fffbec;border:1px solid #ffe9a0;padding:8px 12px;border-radius:6px;margin-bottom:12px">💡 找到心仪素材？复制 PID 后告诉 Claude「下载 PID xxxxx」</div>
+              <div style="font-size:12px;color:#78350f;background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:6px;margin-bottom:12px">💡 看到心仪的素材？复制 PID 后告诉 Claude「下载 PID xxxxx」</div>
               <div class="rg">
                 <div class="rc"><div class="ri">🏮</div><div class="ri-info"><div class="ri-title">春节喜庆红色海报</div><div class="ri-pid">PID: 123456789</div></div></div>
                 <div class="rc"><div class="ri">🐉</div><div class="ri-info"><div class="ri-title">新年贺岁龙年主题</div><div class="ri-pid">PID: 987654321</div></div></div>
@@ -997,15 +1207,19 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
       <div class="step-card">
         <div class="step-head"><div class="step-badge">3</div><div class="step-title">下载素材</div></div>
         <div class="step-body">
-          <p class="step-desc">告诉 Claude 您想下载的素材 PID，它会自动获取下载链接并保存文件。</p>
+          <p class="step-desc">告诉 Claude 你想下载的素材 PID，它会自动获取下载链接并保存文件。</p>
           <div class="chat">
-            <div class="brow user"><div class="av av-user">👤</div><div class="bubble b-user">帮我下载 PID 123456789 的素材</div></div>
-            <div class="brow"><div class="av av-ai">千</div>
+            <div class="brow user">
+              <div class="av av-user">👤</div>
+              <div class="bubble b-user">帮我下载 PID 123456789 的素材</div>
+            </div>
+            <div class="brow">
+              <div class="av av-ai">千</div>
               <div class="bubble b-ai">
-                📦 正在获取素材下载信息...<br>
-                ⬇️ 正在下载：春节喜庆红色海报.psd（12.5 MB）<br><br>
-                ✅ <strong>下载完成！</strong><br>
-                📁 文件已保存至您的工作文件夹<br>
+                📦 正在获取下载链接...<br>
+                ⬇ 下载中：春节喜庆红色海报.psd（12.5 MB）<br><br>
+                ✅ <strong>下载完成</strong><br>
+                📁 文件已保存到你的工作文件夹<br>
                 [查看文件] →
               </div>
             </div>
@@ -1016,28 +1230,32 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   </div>
 
   <!-- ═══════════════════════════════════
-       TAB 3 · AI 生成
+       TAB 3 · AI 生图
   ════════════════════════════════════ -->
   <div class="section" id="tab-ai">
     <div class="sec-head">
-      <h2>🤖 AI 图片生成</h2>
-      <p>用文字描述创意，千图 AI 为您秒级生成高质量图片</p>
+      <h2>AI 生图</h2>
+      <p>描述你想要的画面，千图 AI 秒级生成高质量图片</p>
     </div>
 
     <div class="step-list">
       <div class="step-card">
-        <div class="step-head"><div class="step-badge">1</div><div class="step-title">首次使用：选择模型偏好</div></div>
+        <div class="step-head"><div class="step-badge">1</div><div class="step-title">首次使用：选择模型</div></div>
         <div class="step-body">
-          <p class="step-desc">首次使用 AI 生成功能，Claude 会列出可用模型供您选择，选择后会记住您的偏好。</p>
+          <p class="step-desc">第一次使用 AI 生图时，Claude 会列出可用模型供你选择，选完后会记住你的偏好，之后不再重复询问。</p>
           <div class="chat">
-            <div class="brow user"><div class="av av-user">👤</div><div class="bubble b-user">千图 AI 生成一张春节贺卡</div></div>
-            <div class="brow"><div class="av av-ai">千</div>
+            <div class="brow user">
+              <div class="av av-user">👤</div>
+              <div class="bubble b-user">千图 AI 生成一张春节贺卡</div>
+            </div>
+            <div class="brow">
+              <div class="av av-ai">千</div>
               <div class="bubble b-ai">
-                检测到首次使用 AI 生成，为您列出可用模型：<br><br>
-                1️⃣ <strong>通用写实模型</strong> — 适合人像、场景<br>
-                2️⃣ <strong>插画风格模型</strong> — 适合卡通、插画<br>
-                3️⃣ <strong>商业设计模型</strong> — 适合海报、Banner<br><br>
-                请告诉我您想使用哪个模型？
+                首次使用，为你列出可用模型：<br><br>
+                1️⃣ <strong>通用写实模型</strong> — 适合人像、场景、摄影风格<br>
+                2️⃣ <strong>插画风格模型</strong> — 适合卡通、插画、创意图<br>
+                3️⃣ <strong>商业设计模型</strong> — 适合海报、Banner、封面<br><br>
+                你想用哪个？
               </div>
             </div>
           </div>
@@ -1047,24 +1265,27 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
       <div class="step-card">
         <div class="step-head"><div class="step-badge">2</div><div class="step-title">描述创意，开始生成</div></div>
         <div class="step-body">
-          <p class="step-desc">用自然语言描述您想要的图片内容，AI 将自动生成。</p>
+          <p class="step-desc">用自然语言描述你想要的图片内容，AI 自动处理。可以指定风格、数量、比例。</p>
           <div class="chat">
-            <div class="brow user"><div class="av av-user">👤</div><div class="bubble b-user">用插画风格模型，生成一张红色喜庆春节贺卡，要有灯笼和烟花</div></div>
-            <div class="brow"><div class="av av-ai">千</div>
+            <div class="brow user">
+              <div class="av av-user">👤</div>
+              <div class="bubble b-user">用插画风格模型，生成一张红色喜庆春节贺卡，要有灯笼和烟花</div>
+            </div>
+            <div class="brow">
+              <div class="av av-ai">千</div>
               <div class="bubble b-ai">
-                🎨 正在生成图片，请稍候...<br>
-                ⏱️ 预计 15-30 秒<br>
+                🎨 正在生成，大约需要 15–30 秒...<br>
                 ████████░░ 80%
               </div>
             </div>
           </div>
           <div class="ai-grid">
-            <div class="ai-card">🏮<div class="ai-card-label">春节贺卡 · 插画风格</div></div>
-            <div class="ai-card">🎆<div class="ai-card-label">春节贺卡 · 变体 2</div></div>
+            <div class="ai-card">🏮<div class="ai-card-label">春节贺卡 · 插画风格 · 生成 1</div></div>
+            <div class="ai-card">🎆<div class="ai-card-label">春节贺卡 · 插画风格 · 生成 2</div></div>
           </div>
           <div class="callout c-info">
             <div class="callout-icon">💡</div>
-            <div>每次生成默认 2 张，可指定「生成 4 张」增加数量，也可指定比例如「16:9 横版」。</div>
+            <div>默认每次生成 2 张。可以说「生成 4 张」增加数量，或指定比例，例如「16:9 横版」。</div>
           </div>
         </div>
       </div>
@@ -1076,60 +1297,60 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   ════════════════════════════════════ -->
   <div class="section" id="tab-tonekuan">
     <div class="sec-head">
-      <h2>🎭 做同款</h2>
+      <h2>做同款</h2>
       <p>以千图素材或参考图为基础，AI 生成风格相近的新图片</p>
     </div>
 
     <div class="callout c-warn">
       <div class="callout-icon">⚠️</div>
-      <div>做同款接口<strong>必须提供参考图</strong>（千图 PID、图片 URL 或本地图片），与纯文字生图不同。</div>
+      <div>做同款<strong>必须提供参考图</strong>（千图 PID、图片 URL 或本地上传图片），与纯文字生图不同。</div>
     </div>
 
-    <div style="margin-top:20px">
-      <div style="font-size:18px;font-weight:700;margin-bottom:16px">典型使用场景</div>
+    <div style="margin-top:24px">
+      <div style="font-size:16px;font-weight:700;margin-bottom:16px;letter-spacing:-.01em">4 种使用方式</div>
       <div class="sg">
         <div class="sc">
           <div class="sc-head">
             <div class="sc-icon">🖼</div>
             <div class="sc-name">用千图 PID 做同款</div>
-            <div class="sc-desc">最常用方式，以千图素材为参考</div>
+            <div class="sc-desc">最常用 · 以千图素材为参考</div>
           </div>
           <div class="sc-body">
             <div class="sc-cmd">用 PID 12345678 做同款，换成蓝色调</div>
-            <div class="sc-tip">Claude 会自动获取该素材图片作为参考，生成风格相近但色调不同的新图</div>
+            <div class="sc-tip">Claude 自动获取该素材作为参考，生成风格相近但色调不同的新图</div>
           </div>
         </div>
         <div class="sc">
           <div class="sc-head">
             <div class="sc-icon">🌐</div>
             <div class="sc-name">用图片 URL 做同款</div>
-            <div class="sc-desc">直接使用在线图片链接</div>
+            <div class="sc-desc">参考任意在线图片</div>
           </div>
           <div class="sc-body">
-            <div class="sc-cmd">参考这张图 https://example.com/img.jpg，生成一张类似风格的圣诞海报</div>
-            <div class="sc-tip">适合参考非千图网的图片，直接粘贴 URL 即可</div>
+            <div class="sc-cmd">参考这张图 https://example.com/img.jpg，生成类似风格的圣诞海报</div>
+            <div class="sc-tip">适合参考千图网以外的图片，直接粘贴链接即可</div>
           </div>
         </div>
         <div class="sc">
           <div class="sc-head">
             <div class="sc-icon">📤</div>
             <div class="sc-name">上传本地图片做同款</div>
-            <div class="sc-desc">直接上传本地参考图</div>
+            <div class="sc-desc">直接上传你的参考图</div>
           </div>
           <div class="sc-body">
             <div class="sc-cmd">（上传图片）基于这张图做同款，生成 4 张变体</div>
-            <div class="sc-tip">在对话中上传图片，Claude 会自动将其转换为 Base64 进行处理</div>
+            <div class="sc-tip">在对话中上传图片，Claude 自动处理并传给 AI 模型</div>
           </div>
         </div>
         <div class="sc">
           <div class="sc-head">
             <div class="sc-icon">🔄</div>
             <div class="sc-name">换模型重新生成</div>
-            <div class="sc-desc">使用不同模型生成更多变体</div>
+            <div class="sc-desc">用不同模型探索更多变体</div>
           </div>
           <div class="sc-body">
             <div class="sc-cmd">换一个模型再做同款，这次要卡通风格</div>
-            <div class="sc-tip">Claude 会列出其他可用模型，选择后重新生成</div>
+            <div class="sc-tip">Claude 会列出其他可用模型，选择后立即重新生成</div>
           </div>
         </div>
       </div>
@@ -1137,53 +1358,102 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   </div>
 
   <!-- ═══════════════════════════════════
-       TAB 5 · 命令参考
+       TAB 5 · 参数文档
   ════════════════════════════════════ -->
   <div class="section" id="tab-reference">
     <div class="sec-head">
-      <h2>📖 命令参考</h2>
+      <h2>参数文档</h2>
       <p>搜索、生成、下载的完整参数说明</p>
     </div>
 
     <div class="step-list">
       <div class="step-card">
-        <div class="step-head"><div class="step-badge" style="font-size:16px">🔍</div><div class="step-title">素材搜索参数</div></div>
+        <div class="step-head">
+          <div class="step-badge" style="font-size:15px;background:linear-gradient(135deg,#2563eb,#60a5fa)">🔍</div>
+          <div class="step-title">素材搜索参数</div>
+        </div>
         <div class="step-body">
           <table class="tbl">
-            <thead><tr><th>参数</th><th>说明</th><th>示例</th></tr></thead>
+            <thead>
+              <tr><th>参数</th><th>说明</th><th>自然语言示例</th></tr>
+            </thead>
             <tbody>
-              <tr><td><span class="param">keyword</span></td><td>搜索关键词（必填）</td><td>「春节海报」「商务人物」</td></tr>
-              <tr><td><span class="param">page</span> <span class="opt">可选</span></td><td>页码，默认第 1 页，最多 100 页</td><td>「第 2 页」「翻到下一页」</td></tr>
-              <tr><td><span class="param">kid</span> <span class="opt">可选</span></td><td>分类筛选，0=全部<br>130=免抠 · 275=广告 · 735=插画<br>668=摄影 · 743=GIF · 276=字体</td><td>「只搜插画类」「找免抠元素」</td></tr>
-              <tr><td><span class="param">ai-search</span> <span class="opt">可选</span></td><td>启用 AI 向量搜索，适合描述性查询</td><td>「用 AI 搜索 红色喜庆灯笼祥云」</td></tr>
+              <tr>
+                <td><span class="param">keyword</span><span class="req">必填</span></td>
+                <td>搜索关键词</td>
+                <td>「春节海报」「商务人物」</td>
+              </tr>
+              <tr>
+                <td><span class="param">page</span><span class="opt">可选</span></td>
+                <td>页码，默认第 1 页，最多 100 页</td>
+                <td>「第 2 页」「翻下一页」</td>
+              </tr>
+              <tr>
+                <td><span class="param">kid</span><span class="opt">可选</span></td>
+                <td>分类筛选（0=全部 / 130=免抠 / 275=广告 / 735=插画 / 668=摄影 / 743=GIF / 276=字体）</td>
+                <td>「只搜插画类」「找免抠元素」</td>
+              </tr>
+              <tr>
+                <td><span class="param">ai-search</span><span class="opt">可选</span></td>
+                <td>启用 AI 向量搜索，适合描述性长句查询</td>
+                <td>「用 AI 搜索 红色喜庆灯笼祥云」</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <div class="step-card">
-        <div class="step-head"><div class="step-badge" style="font-size:16px">🤖</div><div class="step-title">AI 生成参数</div></div>
+        <div class="step-head">
+          <div class="step-badge" style="font-size:15px;background:linear-gradient(135deg,#7c3aed,#a78bfa)">🎨</div>
+          <div class="step-title">AI 生图参数</div>
+        </div>
         <div class="step-body">
           <table class="tbl">
-            <thead><tr><th>参数</th><th>说明</th><th>示例</th></tr></thead>
+            <thead>
+              <tr><th>参数</th><th>说明</th><th>自然语言示例</th></tr>
+            </thead>
             <tbody>
-              <tr><td><span class="param">prompt</span></td><td>图片描述（必填）</td><td>「红色喜庆春节贺卡 灯笼烟花」</td></tr>
-              <tr><td><span class="param">model</span> <span class="opt">可选</span></td><td>模型 ID，首次使用会列出可选项</td><td>「用插画风格模型」</td></tr>
-              <tr><td><span class="param">nums</span> <span class="opt">可选</span></td><td>生成数量，默认 2 张</td><td>「生成 4 张」</td></tr>
-              <tr><td><span class="param">ref-pid</span> <span class="opt">可选</span></td><td>参考素材 PID（做同款）</td><td>「用 PID 12345 做同款」</td></tr>
-              <tr><td><span class="param">ref-url</span> <span class="opt">可选</span></td><td>参考图片 URL（做同款）</td><td>「参考 https://...」</td></tr>
+              <tr>
+                <td><span class="param">prompt</span><span class="req">必填</span></td>
+                <td>图片内容描述</td>
+                <td>「红色喜庆春节贺卡，灯笼烟花」</td>
+              </tr>
+              <tr>
+                <td><span class="param">model</span><span class="opt">可选</span></td>
+                <td>模型 ID，首次使用会提示可选项</td>
+                <td>「用插画风格模型」</td>
+              </tr>
+              <tr>
+                <td><span class="param">nums</span><span class="opt">可选</span></td>
+                <td>生成数量，默认 2 张，最多 4 张</td>
+                <td>「生成 4 张」</td>
+              </tr>
+              <tr>
+                <td><span class="param">ref-pid</span><span class="opt">可选</span></td>
+                <td>参考素材 PID（做同款）</td>
+                <td>「用 PID 12345 做同款」</td>
+              </tr>
+              <tr>
+                <td><span class="param">ref-url</span><span class="opt">可选</span></td>
+                <td>参考图片 URL（做同款）</td>
+                <td>「参考 https://...」</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <div class="step-card">
-        <div class="step-head"><div class="step-badge" style="font-size:16px">⚙️</div><div class="step-title">配置与工具命令</div></div>
+        <div class="step-head">
+          <div class="step-badge" style="font-size:15px;background:linear-gradient(135deg,#059669,#34d399)">⚙️</div>
+          <div class="step-title">配置与工具命令</div>
+        </div>
         <div class="step-body">
           <div class="terminal">
             <div class="term-bar"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><span class="term-label">常用命令</span></div>
             <div class="term-body">
-<span class="tc"># 设置 API Key</span>
+<span class="tc"># 绑定 API Key</span>
 <span class="tp">$</span> python3 init_config.py <span class="ts">--api-key sk_your_key</span>
 
 <span class="tc"># 查看当前配置（脱敏显示）</span>
@@ -1192,7 +1462,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
 <span class="tc"># 查看可用 AI 模型列表</span>
 <span class="tp">$</span> python3 list_models.py
 
-<span class="tc"># 设置默认模型</span>
+<span class="tc"># 设置默认模型（省去每次选择）</span>
 <span class="tp">$</span> python3 init_config.py <span class="ts">--default-model MODEL_ID</span>
 
 <span class="tc"># 重置所有配置</span>
@@ -1201,7 +1471,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
           </div>
           <div class="callout c-info" style="margin-top:12px">
             <div class="callout-icon">📁</div>
-            <div>配置文件默认保存在 <code>~/.58pic_config.json</code>，仅当前用户可读，请勿分享给他人。</div>
+            <div>配置文件默认保存在 <code>~/.58pic_config.json</code>，仅当前用户可读。请不要分享给他人。</div>
           </div>
         </div>
       </div>
@@ -1215,12 +1485,12 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
 </footer>
 
 <script>
-  function switchTab(id) {
+  function switchTab(id, el) {
+    if (!el) el = event.currentTarget;
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    el.classList.add('active');
     document.getElementById('tab-' + id).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function selectTool(el) {
@@ -1231,18 +1501,28 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
   }
 
   function setMode(tool, mode, btn) {
-    btn.closest('.mode-row').querySelectorAll('.mb').forEach(b => b.classList.remove('active'));
+    btn.closest('.mode-row').querySelectorAll('.mb').forEach(b => {
+      if (!b.disabled) b.classList.remove('active');
+    });
     btn.classList.add('active');
     const panel = document.getElementById('ip-' + tool);
     panel.querySelectorAll('.imode').forEach(m => m.classList.remove('active'));
-    panel.querySelector('#' + tool + '-' + mode).classList.add('active');
+    const target = panel.querySelector('#' + tool + '-' + mode);
+    if (target) target.classList.add('active');
   }
 
   function cpCode(btn) {
     const text = btn.closest('.codeblock').querySelector('pre').innerText;
     navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = '已复制 ✓'; btn.classList.add('ok');
-      setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('ok'); }, 1800);
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('ok');
+      setTimeout(() => {
+        btn.textContent = '复制';
+        btn.classList.remove('ok');
+      }, 1800);
+    }).catch(() => {
+      btn.textContent = '复制失败';
+      setTimeout(() => { btn.textContent = '复制'; }, 1800);
     });
   }
 </script>

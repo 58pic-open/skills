@@ -19,6 +19,40 @@ import urllib.parse
 
 CONFIG_FILE = os.path.expanduser("~/.58pic_config.json")
 MODELS_CACHE_FILE = "/tmp/58pic_models.json"
+SESSION_FILENAME = "session.json"
+DEFAULT_OUTPUT_DIR = "./58pic_output"
+
+
+def get_config_output_dir():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f).get("output_dir", "")
+        except Exception:
+            pass
+    return ""
+
+
+# ── Session helpers ──────────────────────────────────────────────────────────
+
+def load_session(output_dir):
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    if os.path.exists(session_file):
+        try:
+            with open(session_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"output_dir": os.path.abspath(output_dir),
+            "searches": [], "downloads": [], "ai_results": []}
+
+
+def save_session(session, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    with open(session_file, "w", encoding="utf-8") as f:
+        json.dump(session, f, ensure_ascii=False, indent=2)
+    return session_file
 
 
 def load_config():
@@ -69,7 +103,7 @@ def api_call(config, method, route, payload=None, use_get_params=False):
             print(f"   错误详情: {msg}")
             if remaining:
                 print(f"   剩余点数: {remaining}")
-        except:
+        except Exception:
             if error_body:
                 print(f"   错误详情: {error_body[:300]}")
         sys.exit(1)
@@ -78,23 +112,23 @@ def api_call(config, method, route, payload=None, use_get_params=False):
         sys.exit(1)
 
 
-def get_ref_url_from_pid_cache(pid):
-    """尝试从搜索缓存中找到素材的预览 URL"""
-    cache_file = "/tmp/58pic_search_results.json"
-    if os.path.exists(cache_file):
-        try:
-            with open(cache_file, "r", encoding="utf-8") as f:
-                cache = json.load(f)
-            for item in cache.get("items", []):
-                if str(item.get("pid")) == str(pid):
-                    url = item.get("preview_url") or item.get("download_url")
-                    if url:
-                        # 补全协议
-                        if url.startswith("//"):
-                            url = "https:" + url
-                        return url
-        except:
-            pass
+def get_ref_url_from_session(pid, output_dir):
+    """从 session.json 或搜索结果缓存中找到素材的预览 URL"""
+    # 优先从 session.json 的搜索记录里找
+    session = load_session(output_dir)
+    for search_entry in session.get("searches", []):
+        results_file = search_entry.get("results_file", "")
+        if results_file and os.path.exists(results_file):
+            try:
+                with open(results_file, "r", encoding="utf-8") as f:
+                    cache = json.load(f)
+                for item in cache.get("items", []):
+                    if str(item.get("pid")) == str(pid):
+                        url = item.get("preview_url") or item.get("download_url")
+                        if url:
+                            return url
+            except Exception:
+                pass
     return None
 
 
@@ -126,11 +160,10 @@ def poll_task_status(config, ai_id, max_wait=180, interval=5):
         if status == 3:  # 成功
             print(f"\n✅ 生成完成！（用时 {elapsed}s）")
             return data.get("details", [])
-        elif status in (4, 5):  # 失败状态（通常 4=失败）
+        elif status in (2, 4, 5):  # 失败状态（2=失败, 4=失败, 5=失败）
             print(f"\n❌ 生成失败（status={status}）")
             sys.exit(1)
 
-        # 显示进度
         dots = "." * ((elapsed // interval % 4) + 1)
         print(f"\r⏳ 任务已提交（ai_id: {ai_id}），等待生成中{dots:<4} ({elapsed}s)", end="", flush=True)
         time.sleep(interval)
@@ -174,10 +207,13 @@ def main():
     parser.add_argument("--ref-urls", nargs="+", help="多张参考图片 URL 列表（多图做同款）")
     parser.add_argument("--ref-image-path", help="本地参考图片路径（将转为 base64 上传，≤8MB）")
     parser.add_argument("--generate-nums", type=int, default=1, help="生成张数（1-16，默认 1）")
-    parser.add_argument("--output-dir", default="/sessions/jolly-nice-feynman/mnt/skills/", help="输出目录")
+    _cfg_dir = get_config_output_dir() or DEFAULT_OUTPUT_DIR
+    parser.add_argument("--output-dir", default=_cfg_dir,
+                        help=f"输出目录（默认：{_cfg_dir}）")
     parser.add_argument("--max-wait", type=int, default=180, help="最长等待秒数（默认 180）")
     args = parser.parse_args()
 
+    output_dir = os.path.abspath(args.output_dir)
     config = load_config()
     defaults = config.get("defaults", {})
 
@@ -218,17 +254,15 @@ def main():
         print(f"   参考来源: 千图素材 PID {args.ref_pid}")
         payload["picid"] = str(args.ref_pid)
 
-        # 尝试从缓存获取预览 URL
-        cached_url = get_ref_url_from_pid_cache(args.ref_pid)
+        # 从 session.json 的搜索记录获取预览 URL
+        cached_url = get_ref_url_from_session(args.ref_pid, output_dir)
         if cached_url:
             print(f"   参考图预览 URL: {cached_url[:60]}...")
             payload["reference_image_urls"] = [cached_url]
             payload["reference_image_url"] = ""
         else:
-            # 没有缓存 URL，需要用户先下载该素材的预览
-            print("   ⚠️  未在搜索缓存中找到该 PID 的预览 URL")
+            print("   ⚠️  未在 session 记录中找到该 PID 的预览 URL")
             print("   建议先搜索该素材获取预览图")
-            # 仍然传 picid，让 API 自行处理
             payload["reference_image_url"] = ""
             payload["reference_image_urls"] = []
 
@@ -252,7 +286,6 @@ def main():
             sys.exit(1)
         payload["image_base64"] = image_to_base64(args.ref_image_path)
 
-    # 加入描述词
     payload["prompt"] = prompt
     payload["ai_title"] = prompt
 
@@ -281,7 +314,7 @@ def main():
         sys.exit(1)
 
     # 下载生成的图片
-    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     downloaded_files = []
 
@@ -289,14 +322,13 @@ def main():
         if detail.get("status") != 3:
             continue
 
-        # 优先使用 download_url（无水印），其次 preview_url
         img_url = detail.get("download_url") or detail.get("preview_url") or detail.get("image_url")
         if not img_url:
             continue
 
         ext = get_image_ext_from_url(img_url)
         filename = f"58pic_ai_{timestamp}_{i+1}.{ext}"
-        output_path = os.path.join(args.output_dir, filename)
+        output_path = os.path.join(output_dir, filename)
 
         print(f"⬇️  下载生成图片 {i+1}/{len(details)}: {filename}")
         print(f"   宽高: {detail.get('width', '?')}×{detail.get('height', '?')}")
@@ -310,12 +342,29 @@ def main():
 
     if downloaded_files:
         print(f"\n🎉 成功下载 {len(downloaded_files)} 张图片！")
+
+        # 更新 session.json
+        session = load_session(output_dir)
+        session["ai_results"].append({
+            "ai_id": str(ai_id),
+            "model": model,
+            "prompt": prompt,
+            "ref_pid": args.ref_pid or "",
+            "files": downloaded_files,
+            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        })
+        session_file = save_session(session, output_dir)
+
+        print(f"📋 Session 已更新: {session_file}")
+
         result_info = {
             "success": True,
             "ai_id": str(ai_id),
             "model": model,
             "prompt": prompt,
             "files": downloaded_files,
+            "session_file": session_file,
+            "output_dir": output_dir,
         }
         print(f"\n__GENERATE_RESULT__:{json.dumps(result_info, ensure_ascii=False)}")
     else:

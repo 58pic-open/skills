@@ -1,47 +1,24 @@
 {
   "name": "@58pic/skill",
   "version": "1.0.0",
-  "description": "千图网 58pic AI Skill — 素材搜索 & AI 做同款图片生成",
+  "description": "千图网 AI Skill — 在任意 AI 工具中直接搜索千图素材、AI 做同款图片生成",
   "main": "SKILL.md",
+  "skill": {
+    "name": "58pic",
+    "description": "千图网（58pic）AI 开放平台技能集，提供素材搜索和 AI 做同款图片生成两大核心功能",
+    "tools": ["claude-code", "cowork", "cursor", "windsurf", "continue", "vscode"]
+  },
   "files": [
     "SKILL.md",
     "scripts/",
     "references/"
   ],
-  "scripts": {
-    "postinstall": "echo '✅ 58pic skill installed. Run: npx skills add . to activate'"
-  },
-  "keywords": [
-    "claude-skill",
-    "cowork-skill",
-    "cursor-skill",
-    "58pic",
-    "qiantu",
-    "ai",
-    "design",
-    "stock-photo",
-    "image-search"
-  ],
-  "author": "58pic Open Platform <open@58pic.com>",
+  "keywords": ["58pic", "skill", "claude", "ai", "image-search"],
+  "author": "58pic Open Platform",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/58pic-open/skills.git",
     "directory": "58pic"
-  },
-  "homepage": "https://github.com/58pic-open/skills/tree/main/58pic#readme",
-  "bugs": {
-    "url": "https://github.com/58pic-open/skills/issues"
-  },
-  "skill": {
-    "name": "58pic",
-    "version": "1.0.0",
-    "entrypoint": "SKILL.md",
-    "tools": ["claude-code", "cowork", "cursor", "windsurf", "continue", "vscode"],
-    "apiKeyRequired": true,
-    "apiKeyDoc": "https://ai.58pic.com/history?openHistory=1&historyType=5"
-  },
-  "engines": {
-    "node": ">=16.0.0"
   }
 }

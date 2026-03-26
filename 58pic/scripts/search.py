@@ -8,26 +8,78 @@ API: POST https://ai.58pic.com/api/?r=open-platform/search-images
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
 import urllib.error
 
 CONFIG_FILE = os.path.expanduser("~/.58pic_config.json")
-RESULTS_FILE = "/tmp/58pic_search_results.json"
+SESSION_FILENAME = "session.json"
+DEFAULT_OUTPUT_DIR = "./58pic_output"
 
-# 允许的 kid 分类值
-VALID_KIDS = {
-    0: "全部",
-    8: "办公",
-    130: "免抠元素",
-    275: "广告设计",
-    276: "字体",
-    668: "摄影图",
-    735: "插画",
-    743: "GIF动图",
+
+def get_config_output_dir():
+    """从全局配置文件读取 output_dir，未设置则返回空字符串"""
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f).get("output_dir", "")
+        except Exception:
+            pass
+    return ""
+
+
+# 允许的 did 一级分类值（0 = 全部，不传参数）
+VALID_DIDS = {
+    0:  "全部",
+    2:  "海报展板",
+    3:  "电商淘宝",
+    4:  "装饰装修",
+    5:  "网页UI",
+    6:  "音乐音效",
+    7:  "3D素材",
+    8:  "PPT模板",
+    10: "背景",
+    11: "免抠元素",
+    12: "Excel模板",
+    14: "简历模板",
+    15: "Word模板",
+    16: "社交媒体",
+    17: "插画",
+    40: "字库",
+    41: "艺术字",
+    53: "高清图片",
+    56: "视频模板",
+    57: "元素世界",
+    60: "AI数字艺术",
+    66: "品牌广告",
 }
 
+
+# ── Session helpers ──────────────────────────────────────────────────────────
+
+def load_session(output_dir):
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    if os.path.exists(session_file):
+        try:
+            with open(session_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"output_dir": os.path.abspath(output_dir),
+            "searches": [], "downloads": [], "ai_results": []}
+
+
+def save_session(session, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+    session_file = os.path.join(output_dir, SESSION_FILENAME)
+    with open(session_file, "w", encoding="utf-8") as f:
+        json.dump(session, f, ensure_ascii=False, indent=2)
+    return session_file
+
+
+# ── API ──────────────────────────────────────────────────────────────────────
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
@@ -58,7 +110,7 @@ def api_post(config, route, payload):
         try:
             err_data = json.loads(error_body)
             print(f"   错误详情: {err_data.get('msg', error_body)}")
-        except:
+        except Exception:
             if error_body:
                 print(f"   错误详情: {error_body[:200]}")
         if e.code == 401:
@@ -66,20 +118,26 @@ def api_post(config, route, payload):
         elif e.code == 429:
             print("   → 请求过于频繁或点数不足")
         elif e.code == 400:
-            print("   → 参数错误（检查 kid 是否合法、page 是否在 1-100 范围内）")
+            print("   → 参数错误（检查 did 是否合法、page 是否在 1-100 范围内）")
         sys.exit(1)
     except urllib.error.URLError as e:
         print(f"❌ 网络连接失败: {e.reason}")
         sys.exit(1)
 
 
+# ── Main ─────────────────────────────────────────────────────────────────────
+
 def main():
     parser = argparse.ArgumentParser(description="千图网素材搜索")
     parser.add_argument("--keyword", "-k", required=True, help="搜索关键词")
     parser.add_argument("--page", "-p", type=int, default=1, help="页码（1-100，默认 1）")
-    parser.add_argument("--kid", type=int, default=0, help=f"一级分类 ID（0=全部）。可选: {list(VALID_KIDS.keys())}")
-    parser.add_argument("--ai-search", action="store_true", help="使用 AI 向量搜索（适合描述性关键词）")
-    parser.add_argument("--output", default=RESULTS_FILE, help="结果输出文件路径")
+    parser.add_argument("--did", type=int, default=0,
+                        help=f"一级分类 ID（0=全部，不传）。可选: {list(VALID_DIDS.keys())}")
+    parser.add_argument("--ai-search", action="store_true",
+                        help="使用 AI 向量搜索（适合描述性关键词）")
+    _cfg_dir = get_config_output_dir() or DEFAULT_OUTPUT_DIR
+    parser.add_argument("--output-dir", default=_cfg_dir,
+                        help=f"输出目录（默认：配置文件或当前目录下的 58pic_output/，当前: {_cfg_dir}）")
     args = parser.parse_args()
 
     # 校验 page
@@ -87,24 +145,25 @@ def main():
         print(f"❌ 页码必须在 1-100 范围内，当前: {args.page}")
         sys.exit(1)
 
-    # 校验 kid
-    if args.kid not in VALID_KIDS:
-        print(f"❌ 无效的 kid: {args.kid}，允许值: {list(VALID_KIDS.keys())}")
-        print(f"   对应分类: {VALID_KIDS}")
+    # 校验 did
+    if args.did not in VALID_DIDS:
+        print(f"❌ 无效的 did: {args.did}，允许值: {list(VALID_DIDS.keys())}")
+        print(f"   对应分类: {VALID_DIDS}")
         sys.exit(1)
 
     config = load_config()
 
     search_type = "AI 向量" if args.ai_search else "关键词"
-    kid_name = VALID_KIDS.get(args.kid, str(args.kid))
-    print(f"🔍 {search_type}搜索「{args.keyword}」，分类：{kid_name}，第 {args.page} 页...")
+    did_name = VALID_DIDS.get(args.did, str(args.did))
+    print(f"🔍 {search_type}搜索「{args.keyword}」，分类：{did_name}，第 {args.page} 页...")
 
     payload = {
         "keyword": args.keyword,
         "page": args.page,
-        "kid": args.kid,
         "ai_search": args.ai_search,
     }
+    if args.did != 0:
+        payload["did"] = args.did
 
     result = api_post(config, "open-platform/search-images", payload)
 
@@ -117,20 +176,42 @@ def main():
     total_page = data.get("total_page", 1)
     suggestions = data.get("suggestions", [])
 
-    # 保存结果
+    # 准备输出目录
+    output_dir = os.path.abspath(args.output_dir)
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 保存搜索结果到项目目录（每次生成唯一文件名，避免覆盖历史）
+    ts = time.strftime("%Y%m%d_%H%M%S")
+    safe_kw = re.sub(r"[^\w\u4e00-\u9fff]", "_", args.keyword)[:20]
+    results_file = os.path.join(output_dir, f"search_{safe_kw}_p{args.page}_{ts}.json")
     save_data = {
         "keyword": args.keyword,
         "page": args.page,
         "total_page": total_page,
-        "kid": args.kid,
-        "kid_name": kid_name,
+        "did": args.did,
+        "did_name": did_name,
         "ai_search": args.ai_search,
         "items": items,
         "search_time": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
-
-    with open(args.output, "w", encoding="utf-8") as f:
+    with open(results_file, "w", encoding="utf-8") as f:
         json.dump(save_data, f, ensure_ascii=False, indent=2)
+
+    # 更新 session.json
+    session = load_session(output_dir)
+    session_entry = {
+        "keyword": args.keyword,
+        "page": args.page,
+        "total_page": total_page,
+        "did_name": did_name,
+        "ai_search": args.ai_search,
+        "item_count": len(items),
+        "results_file": results_file,
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    session["searches"].insert(0, session_entry)
+    session["searches"] = session["searches"][:20]  # 保留最近 20 次
+    session_file = save_session(session, output_dir)
 
     # 打印摘要
     print(f"\n✅ 搜索完成！第 {args.page}/{total_page} 页，本页 {len(items)} 条")
@@ -153,8 +234,12 @@ def main():
     if total_page > args.page:
         print(f"\n  📄 还有更多结果（共 {total_page} 页），加 --page {args.page + 1} 查看下一页")
 
-    print(f"\n📁 完整结果已保存: {args.output}")
+    print(f"\n📁 搜索结果已保存: {results_file}")
+    print(f"📋 Session 文件: {session_file}")
     print("💡 告诉我您想下载哪个素材的 PID，或者用某个 PID 做同款")
+
+    # 输出结构化结果供 SKILL.md 解析
+    print(f"\n__SEARCH_RESULT__:{json.dumps({'results_file': results_file, 'session_file': session_file, 'output_dir': output_dir}, ensure_ascii=False)}")
 
 
 if __name__ == "__main__":

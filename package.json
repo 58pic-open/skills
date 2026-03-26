@@ -1,23 +1,7 @@
 {
-  "name": "@58pic/skills",
-  "version": "1.0.0",
-  "description": "千图网 58pic 官方 AI Skill 集合",
-  "workspaces": [
-    "58pic"
-  ],
-  "scripts": {
-    "release": "npm publish --workspaces --access public"
-  },
-  "keywords": [
-    "claude-skill",
-    "cowork-skill",
-    "58pic",
-    "ai-skill"
-  ],
-  "author": "58pic Open Platform",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/58pic-open/skills.git"
-  }
+  "name": "58pic-skills",
+  "private": true,
+  "workspaces": ["58pic"],
+  "description": "千图网官方 AI Skill 集合",
+  "license": "MIT"
 }
