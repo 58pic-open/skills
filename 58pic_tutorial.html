@@ -1160,7 +1160,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
               <div class="bubble b-ai">
                 正在搜索「春节海报」...<br><br>
                 🔍 <strong>搜索完成</strong><br>
-                共找到 <strong>2,847</strong> 条结果，第 1 页（20 条）<br><br>
+                共找到 <strong>2,847</strong> 条结果，第 1 页（36 条）<br><br>
                 <code>PID: 123456789</code> 春节喜庆红色海报模板<br>
                 <code>PID: 987654321</code> 新年贺岁龙年主题海报<br>
                 <code>PID: 456789123</code> 传统中国风春节横幅...<br>
@@ -1172,9 +1172,9 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             <div class="term-bar"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div><span class="term-label">后台执行</span></div>
             <div class="term-body">
               <span class="tc"># 搜索千图素材</span><br>
-              <span class="tp">$</span> <span class="tk">python3</span> <span class="ta">search.py</span> <span class="ts">--keyword "春节海报" --page 1 --limit 20</span><br><br>
+              <span class="tp">$</span> <span class="tk">python3</span> <span class="ta">search.py</span> <span class="ts">--keyword "春节海报" --page 1</span><br><br>
               <span class="to">🔍 正在搜索「春节海报」...</span><br>
-              <span class="to">✅ 找到 2847 条结果，当前第 1 页（20 条）</span><br>
+              <span class="to">✅ 找到 2847 条结果，当前第 1 页（36 条）</span><br>
               <span class="tc">─────────────────────────────────</span><br>
               <span class="to"> 1. [123456789] 春节喜庆红色海报模板 · PSD · 2480×3508</span><br>
               <span class="to"> 2. [987654321] 新年贺岁龙年主题海报 · PSD · 1920×1080</span><br>
@@ -1285,7 +1285,7 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
           </div>
           <div class="callout c-info">
             <div class="callout-icon">💡</div>
-            <div>默认每次生成 2 张。可以说「生成 4 张」增加数量，或指定比例，例如「16:9 横版」。</div>
+            <div>默认每次生成 1 张。可以说「生成 4 张」增加数量（最多 16 张），或指定比例，例如「16:9 横版」。</div>
           </div>
         </div>
       </div>
@@ -1389,9 +1389,9 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
                 <td>「第 2 页」「翻下一页」</td>
               </tr>
               <tr>
-                <td><span class="param">kid</span><span class="opt">可选</span></td>
-                <td>分类筛选（0=全部 / 130=免抠 / 275=广告 / 735=插画 / 668=摄影 / 743=GIF / 276=字体）</td>
-                <td>「只搜插画类」「找免抠元素」</td>
+                <td><span class="param">did</span><span class="opt">可选</span></td>
+                <td>一级分类 ID，0或不传=全部。可选值：2=海报展板 / 3=电商淘宝 / 4=装饰装修 / 5=网页UI / 6=音乐音效 / 7=3D素材 / 8=PPT模板 / 10=背景 / 11=免抠元素 / 12=Excel模板 / 14=简历模板 / 15=Word模板 / 16=社交媒体 / 17=插画 / 40=字库 / 41=艺术字 / 53=高清图片 / 56=视频模板 / 57=元素世界 / 60=AI数字艺术 / 66=品牌广告</td>
+                <td>「只搜插画类」「找免抠元素」「搜 PPT 模板」</td>
               </tr>
               <tr>
                 <td><span class="param">ai-search</span><span class="opt">可选</span></td>
@@ -1415,29 +1415,44 @@ unzip 58pic.zip <span class="xo">-d</span> ./58pic
             </thead>
             <tbody>
               <tr>
-                <td><span class="param">prompt</span><span class="req">必填</span></td>
-                <td>图片内容描述</td>
+                <td><span class="param">prompt</span> / <span class="param">ai_title</span><span class="opt">可选</span></td>
+                <td>图片内容描述；省略时默认「开放平台同款」</td>
                 <td>「红色喜庆春节贺卡，灯笼烟花」</td>
               </tr>
               <tr>
-                <td><span class="param">model</span><span class="opt">可选</span></td>
-                <td>模型 ID，首次使用会提示可选项</td>
+                <td><span class="param">model</span><span class="req">必填</span></td>
+                <td>模型 ID（整数或字符串），从 available-models 接口获取</td>
                 <td>「用插画风格模型」</td>
               </tr>
               <tr>
-                <td><span class="param">nums</span><span class="opt">可选</span></td>
-                <td>生成数量，默认 2 张，最多 4 张</td>
+                <td><span class="param">generate_nums</span><span class="opt">可选</span></td>
+                <td>生成数量，默认 1 张，范围 1–16</td>
                 <td>「生成 4 张」</td>
               </tr>
               <tr>
-                <td><span class="param">ref-pid</span><span class="opt">可选</span></td>
-                <td>参考素材 PID（做同款）</td>
+                <td><span class="param">reference_image_url</span><span class="opt">三选一</span></td>
+                <td>单张参考图 URL（做同款必须提供参考图）</td>
+                <td>「参考 https://...」</td>
+              </tr>
+              <tr>
+                <td><span class="param">reference_image_urls</span><span class="opt">三选一</span></td>
+                <td>多张参考图 URL 列表</td>
+                <td>「同时参考这两张图」</td>
+              </tr>
+              <tr>
+                <td><span class="param">image_base64</span><span class="opt">三选一</span></td>
+                <td>本地图片 Base64 编码（≤8MB），上传本地图片时使用</td>
+                <td>（上传本地图片）「基于这张图做同款」</td>
+              </tr>
+              <tr>
+                <td><span class="param">picid</span><span class="opt">可选</span></td>
+                <td>千图素材 PID，用于同款逻辑（配合 reference_image_url）</td>
                 <td>「用 PID 12345 做同款」</td>
               </tr>
               <tr>
-                <td><span class="param">ref-url</span><span class="opt">可选</span></td>
-                <td>参考图片 URL（做同款）</td>
-                <td>「参考 https://...」</td>
+                <td><span class="param">media_type</span><span class="req">必填</span></td>
+                <td>固定传 <code>"image"</code>，传其他值返回 400</td>
+                <td>（自动填写，无需手动指定）</td>
               </tr>
             </tbody>
           </table>
