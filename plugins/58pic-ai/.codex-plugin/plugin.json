@@ -1,0 +1,44 @@
+{
+  "name": "58pic-ai",
+  "version": "0.1.0",
+  "description": "Generate images and videos, search and download stock assets via 千图AI (58pic) open platform.",
+  "author": {
+    "name": "58pic Open",
+    "url": "https://github.com/58pic-open"
+  },
+  "homepage": "https://ai.58pic.com/open-platform",
+  "repository": "https://github.com/58pic-open/skills",
+  "license": "MIT",
+  "keywords": [
+    "58pic",
+    "qiantu",
+    "image-generation",
+    "video-generation",
+    "stock-assets",
+    "text-to-image",
+    "image-to-image",
+    "text-to-video",
+    "image-to-video"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "58pic AI",
+    "shortDescription": "Generate images/videos and search 58pic stock assets.",
+    "longDescription": "58pic AI adds Codex guidance for 千图AI open platform workflows. It helps install and use the 58pic CLI, authenticate with an API key or OAuth, discover current models, generate images and videos, poll jobs to completion, and search or download stock assets.",
+    "developerName": "58pic Open",
+    "category": "Creativity",
+    "capabilities": [
+      "Image Generation",
+      "Video Generation",
+      "Stock Asset Search",
+      "CLI Workflows"
+    ],
+    "websiteURL": "https://ai.58pic.com/open-platform",
+    "defaultPrompt": [
+      "Generate an image with 58pic",
+      "Make a video with 千图AI",
+      "Search 58pic stock assets"
+    ],
+    "brandColor": "#0057FF"
+  }
+}

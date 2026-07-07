@@ -1,0 +1,20 @@
+{
+  "name": "58pic-open-skills",
+  "interface": {
+    "displayName": "58pic Open Skills"
+  },
+  "plugins": [
+    {
+      "name": "58pic-ai",
+      "source": {
+        "source": "local",
+        "path": "./plugins/58pic-ai"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Creativity"
+    }
+  ]
+}

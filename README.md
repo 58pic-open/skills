@@ -11,6 +11,19 @@ Install into Claude Code / compatible AI IDEs with one command.
 
 ## Install
 
+### Codex Plugin Marketplace
+
+Install this repository as a Codex plugin marketplace:
+
+```bash
+codex plugin marketplace add https://github.com/58pic-open/skills
+codex plugin add 58pic-ai@58pic-open-skills
+```
+
+Restart Codex after installing so the bundled `58pic-generate` skill is loaded.
+
+### Skills CLI
+
 ```bash
 npx skills add 58pic-open/skills
 ```
