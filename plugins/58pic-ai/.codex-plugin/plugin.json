@@ -1,7 +1,7 @@
 {
   "name": "58pic-ai",
-  "version": "0.1.0",
-  "description": "Generate images and videos, search and download stock assets via 千图AI (58pic) open platform.",
+  "version": "0.2.0",
+  "description": "Generate images/videos, search assets, inspect models, and manage account auth via 千图AI (58pic) open platform.",
   "author": {
     "name": "58pic Open",
     "url": "https://github.com/58pic-open"
@@ -23,22 +23,28 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "58pic AI",
-    "shortDescription": "Generate images/videos and search 58pic stock assets.",
-    "longDescription": "58pic AI adds Codex guidance for 千图AI open platform workflows. It helps install and use the 58pic CLI, authenticate with an API key or OAuth, discover current models, generate images and videos, poll jobs to completion, and search or download stock assets.",
+    "shortDescription": "Use 千图AI for generation, assets, models, and account workflows.",
+    "longDescription": "58pic AI adds focused Codex skills for 千图AI open platform workflows: 58pic-generate for image/video generation, 58pic-assets for stock asset search and download, 58pic-models for model discovery and capability checks, and 58pic-account for CLI setup, authentication, credits, and config.",
     "developerName": "58pic Open",
     "category": "Creativity",
     "capabilities": [
       "Image Generation",
       "Video Generation",
       "Stock Asset Search",
+      "Model Discovery",
+      "Account Auth",
       "CLI Workflows"
     ],
     "websiteURL": "https://ai.58pic.com/open-platform",
     "defaultPrompt": [
       "Generate an image with 58pic",
       "Make a video with 千图AI",
-      "Search 58pic stock assets"
+      "Search 58pic stock assets",
+      "Check my 58pic credits",
+      "List available 58pic AI models"
     ],
-    "brandColor": "#0057FF"
+    "brandColor": "#00B878",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
   }
 }
