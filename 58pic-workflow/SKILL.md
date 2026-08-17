@@ -11,6 +11,8 @@ allowed-tools: Bash
 
 把 Agent 的创意方案落到可编辑、可复用、可运行的千图工作流画布。所有操作使用 `58pic workflow` 命令完成。
 
+完整图文教程：[千图工作流 CLI 使用指南](https://58pic-qiye.feishu.cn/docx/OIA4dBDgVomVLxxVYJgcYfeonyb)
+
 ## 这会改变什么
 
 - Agent 能先读取真实画布，再新增或调整节点、连线和输入，最后保存并运行。
