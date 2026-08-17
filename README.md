@@ -11,6 +11,7 @@ Install into Claude Code / compatible AI IDEs with one command.
 | [`58pic-assets`](./58pic-assets/SKILL.md) | Search and download stock assets, photos, templates, and design resources |
 | [`58pic-models`](./58pic-models/SKILL.md) | List AI models and inspect model capabilities |
 | [`58pic-account`](./58pic-account/SKILL.md) | Configure CLI auth, API keys, OAuth login, and credits |
+| [`58pic-workflow`](./58pic-workflow/SKILL.md) | Create, preserve, save, and run 千图工作流 canvases |
 
 ## Install
 
@@ -38,6 +39,7 @@ npx skills add 58pic-open/skills/58pic-generate
 npx skills add 58pic-open/skills/58pic-assets
 npx skills add 58pic-open/skills/58pic-models
 npx skills add 58pic-open/skills/58pic-account
+npx skills add 58pic-open/skills/58pic-workflow
 ```
 
 ## Prerequisites
@@ -55,6 +57,7 @@ After installing, invoke the skill in your AI IDE:
 /58pic-assets search Spring Festival poster templates
 /58pic-models list image models
 /58pic-account check my credits
+/58pic-workflow list my workflows and inspect the canvas before editing
 ```
 
 The skills will:
@@ -77,6 +80,7 @@ Get your API Key at: https://ai.58pic.com/open-platform
 - [58pic-assets skill](./58pic-assets/SKILL.md)
 - [58pic-models skill](./58pic-models/SKILL.md)
 - [58pic-account skill](./58pic-account/SKILL.md)
+- [58pic-workflow tutorial](./58pic-workflow/SKILL.md)
 - [Model selection](./58pic-generate/references/model-selection.md)
 - [Troubleshooting](./58pic-generate/references/troubleshooting.md)
 
