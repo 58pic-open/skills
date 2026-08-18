@@ -25,6 +25,16 @@ allowed-tools: Bash
 3. 批量运行同一画布，给不同的 `prompt`、图片或 JSON 输入。
 4. 让团队沉淀一份可审查、可编辑的节点编排，而不是只保留一次性的生成结果。
 
+## 参考资料路由
+
+按任务读取需要的资料，不要一次加载全部：
+
+- 修改画布结构、节点通用字段或结果：读 [`references/canvas-schema.md`](references/canvas-schema.md)。
+- 选择节点或修改节点参数：读 [`references/node-catalog.md`](references/node-catalog.md)。
+- 新增连线、句柄、分组或调整布局：读 [`references/connections-and-groups.md`](references/connections-and-groups.md)。
+- 从零创建画布或查看完整 JSON：读 [`references/canvas-examples.md`](references/canvas-examples.md)。
+- 保存前运行 `scripts/validate_canvas.mjs`；处理 `workflow get --format json` 输出时先运行 `scripts/extract_canvas.mjs`。
+
 ## 前置条件与认证
 
 确认 Node.js 18+，并检查 CLI 与认证状态：
@@ -52,7 +62,8 @@ allowed-tools: Bash
 
 ```bash
 58pic workflow list --page 1 --page-size 20 --format json
-58pic workflow get <workflow-id> --format json > workflow.json
+58pic workflow get <workflow-id> --format json > workflow-response.json
+node <skill-dir>/scripts/extract_canvas.mjs workflow-response.json workflow.json
 ```
 
 需要查看某次历史执行结果时才给 `get` 传 `--version`：
@@ -85,26 +96,12 @@ allowed-tools: Bash
 
 **先 `get`，后编辑，最后完整保存。** 不要根据旧的 `docs/workflow-example.md` 重新构造画布。
 
-`canvas.json` 的最小骨架如下；实际节点的 `data` 需保留 `get` 返回的原字段：
+普通业务节点使用 `type: "default"`，业务类型放在 `data.customType`。详细结构见 [`references/canvas-schema.md`](references/canvas-schema.md)，完整示例见 [`references/text-pipeline.canvas.json`](references/text-pipeline.canvas.json)。
 
-```json
-{
-  "name": "春日活动海报",
-  "nodes": [
-    {
-      "id": "node-input",
-      "type": "custom",
-      "position": { "x": 120, "y": 160 },
-      "data": {
-        "customType": "user_input",
-        "customeData": {
-          "params": { "prompt": "春日活动海报" }
-        }
-      }
-    }
-  ],
-  "edges": []
-}
+编辑完成后先做本地结构校验：
+
+```bash
+node <skill-dir>/scripts/validate_canvas.mjs ./canvas.json
 ```
 
 保存：
@@ -159,22 +156,18 @@ https://workflow.58pic.com/zh/workflow/4923
 - `get`、`save`、`run` 成功后可以使用对应命令中的工作流 ID。
 - 请求失败、结果状态不明确或没有取得真实 ID 时，不要声称已完成，也不要猜测详情页链接。
 
-## 当前画布数据约定（以 master 为准）
+## 画布硬规则
 
-| 对象 | 必须保留的字段 | 说明 |
-|---|---|---|
-| 工作流 | `id`、`version`、`name`、`nodes`、`edges` | `version` 随读取结果保留；仅 `get --version` 用于指定历史执行回显。 |
-| 节点 | `id`、`type`、`position`、`data` | `data.customType` 标识节点业务类型；不要只保留展示文本。 |
-| 节点业务数据 | `data.customeData` | 历史字段拼写就是 `customeData`，**不能**改成 `customData`。其内的 `params`、`result`、`name`、`index` 等按原样保留，按目标字段做最小修改。 |
-| 边 | `id`、`source`、`target`、`sourceHandle`、`targetHandle`、`type`、`data` | 句柄字段决定节点端口的连接关系；不能只按 source/target 重新生成。 |
-| 分组 | `type: "group"`、`style.width/height`、`parentId` | 分组父节点在画布坐标系中定位；组内子节点以 `parentId` 关联，并使用相对父组的坐标。解组时子节点才恢复画布绝对坐标。编辑既有分组时必须保留返回的坐标体系，不要自行把子节点全部绝对化或相对化。 |
-
-补充规则：
-
+- 普通业务节点使用 `type: "default"`；不要继续使用旧示例中的 `type: "custom"`。
+- `data.customeData` 的历史拼写不能改成 `customData`。
+- 节点句柄同时可能存在于顶层 `handles` 和 `data.handles`；修改时保持一致。
+- 边必须保留 `sourceHandle` 和 `targetHandle`，并引用对应节点中真实存在的句柄。
 - `parentId` 必须指向一个存在且 `type: "group"` 的节点。
-- 新建组需要父节点的 `style.width` / `style.height` 覆盖子节点区域；子节点位置须与父组坐标匹配。
+- 组父节点使用画布绝对坐标；组内子节点使用相对父组坐标。
 - 不要提交仅含增量节点的保存文件。`workflow save` 是完整画布保存，至少需要完整 `nodes`；建议同时提交完整 `edges`。
 - 不要删除未知字段、未知节点类型、节点 `data` 中的配置和结果。Agent 无法理解的字段应原样透传。
+- 不要保存 `connectionPlaceholder` 临时节点。
+- 生成类节点的模型字段以真实节点和实时能力为准，不要从静态文档猜模型 ID。
 
 ## FAQ
 

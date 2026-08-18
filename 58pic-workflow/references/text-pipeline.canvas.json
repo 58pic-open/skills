@@ -1,0 +1,200 @@
+{
+  "name": "文本拆分与选择示例",
+  "description": "静态文本经过拆分和选择后输出",
+  "nodes": [
+    {
+      "id": "node-text-source",
+      "type": "default",
+      "position": { "x": 80, "y": 180 },
+      "data": {
+        "type": "default",
+        "customType": "text",
+        "customeData": {
+          "index": 0,
+          "name": "候选文案",
+          "params": { "prompt": "春日上新,夏日清凉,秋日好物" },
+          "result": { "texts": [], "status": 0, "message": "", "runTime": 0 }
+        },
+        "handles": [
+          {
+            "id": "handle-text-source-output",
+            "type": "source",
+            "position": "right",
+            "connectable": true,
+            "dataType": "text"
+          }
+        ]
+      },
+      "handles": [
+        {
+          "id": "handle-text-source-output",
+          "type": "source",
+          "position": "right",
+          "connectable": true,
+          "dataType": "text"
+        }
+      ],
+      "lock": false,
+      "selected": false
+    },
+    {
+      "id": "node-text-array",
+      "type": "default",
+      "position": { "x": 420, "y": 180 },
+      "data": {
+        "type": "default",
+        "customType": "text_array",
+        "customeData": {
+          "index": 1,
+          "name": "按逗号拆分",
+          "params": { "splitBy": ",", "items": [""] },
+          "result": { "texts": [], "status": 0, "message": "", "runTime": 0 }
+        },
+        "handles": [
+          {
+            "id": "handle-text-array-input",
+            "type": "target",
+            "position": "left",
+            "connectable": true,
+            "dataType": "text"
+          },
+          {
+            "id": "handle-text-array-output",
+            "type": "source",
+            "position": "right",
+            "connectable": true,
+            "dataType": "text_array"
+          }
+        ]
+      },
+      "handles": [
+        {
+          "id": "handle-text-array-input",
+          "type": "target",
+          "position": "left",
+          "connectable": true,
+          "dataType": "text"
+        },
+        {
+          "id": "handle-text-array-output",
+          "type": "source",
+          "position": "right",
+          "connectable": true,
+          "dataType": "text_array"
+        }
+      ],
+      "lock": false,
+      "selected": false
+    },
+    {
+      "id": "node-text-list",
+      "type": "default",
+      "position": { "x": 760, "y": 180 },
+      "data": {
+        "type": "default",
+        "customType": "text_list",
+        "customeData": {
+          "index": 2,
+          "name": "选择第一条",
+          "params": { "selectedIndex": 0, "items": [] },
+          "result": { "texts": [], "status": 0, "message": "", "runTime": 0 }
+        },
+        "handles": [
+          {
+            "id": "handle-text-list-input",
+            "type": "target",
+            "position": "left",
+            "connectable": true,
+            "dataType": "text_array"
+          },
+          {
+            "id": "handle-text-list-output",
+            "type": "source",
+            "position": "right",
+            "connectable": true,
+            "dataType": "text"
+          }
+        ]
+      },
+      "handles": [
+        {
+          "id": "handle-text-list-input",
+          "type": "target",
+          "position": "left",
+          "connectable": true,
+          "dataType": "text_array"
+        },
+        {
+          "id": "handle-text-list-output",
+          "type": "source",
+          "position": "right",
+          "connectable": true,
+          "dataType": "text"
+        }
+      ],
+      "lock": false,
+      "selected": false
+    },
+    {
+      "id": "node-output",
+      "type": "default",
+      "position": { "x": 1100, "y": 180 },
+      "data": {
+        "type": "default",
+        "customType": "output",
+        "customeData": {
+          "index": 3,
+          "name": "结果",
+          "params": { "files": [], "texts": [] },
+          "result": { "files": [], "texts": [], "status": 0, "message": "", "runTime": 0 }
+        },
+        "handles": [
+          {
+            "id": "handle-output-input",
+            "type": "target",
+            "position": "left",
+            "connectable": true,
+            "dataType": "output"
+          }
+        ]
+      },
+      "handles": [
+        {
+          "id": "handle-output-input",
+          "type": "target",
+          "position": "left",
+          "connectable": true,
+          "dataType": "output"
+        }
+      ],
+      "lock": false,
+      "selected": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-text-to-array",
+      "source": "node-text-source",
+      "target": "node-text-array",
+      "sourceHandle": "handle-text-source-output",
+      "targetHandle": "handle-text-array-input",
+      "type": "default"
+    },
+    {
+      "id": "edge-array-to-list",
+      "source": "node-text-array",
+      "target": "node-text-list",
+      "sourceHandle": "handle-text-array-output",
+      "targetHandle": "handle-text-list-input",
+      "type": "default"
+    },
+    {
+      "id": "edge-list-to-output",
+      "source": "node-text-list",
+      "target": "node-output",
+      "sourceHandle": "handle-text-list-output",
+      "targetHandle": "handle-output-input",
+      "type": "default"
+    }
+  ]
+}
