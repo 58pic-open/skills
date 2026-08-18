@@ -135,6 +135,30 @@ allowed-tools: Bash
 
 运行可能消耗积分并创建执行记录。先让用户确认会执行/扣点的操作；不要把 `--node` 当作无副作用的预览。
 
+## 完成后返回工作流详情页
+
+当针对单个工作流的读取、创建、保存或运行已经明确成功，并且已经取得真实工作流 ID 时，在最终回复中附上可直接打开的详情页：
+
+```text
+https://workflow.58pic.com/zh/workflow/<workflow-id>
+```
+
+例如工作流 ID 为 `4923`：
+
+```text
+https://workflow.58pic.com/zh/workflow/4923
+```
+
+推荐回复格式：
+
+```markdown
+工作流已保存：[打开工作流详情](https://workflow.58pic.com/zh/workflow/4923)
+```
+
+- `create` 必须使用成功响应返回的真实工作流 ID。
+- `get`、`save`、`run` 成功后可以使用对应命令中的工作流 ID。
+- 请求失败、结果状态不明确或没有取得真实 ID 时，不要声称已完成，也不要猜测详情页链接。
+
 ## 当前画布数据约定（以 master 为准）
 
 | 对象 | 必须保留的字段 | 说明 |
