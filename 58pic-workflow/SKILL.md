@@ -66,6 +66,8 @@ allowed-tools: Bash
 node <skill-dir>/scripts/extract_canvas.mjs workflow-response.json workflow.json
 ```
 
+`workflow-id` 是工作流对外公开的不透明 ID，可能是字母数字混合的字符串（例如 `1tvy7hfevfc34`），也可能是历史数字 ID。必须完整复制 `workflow_list` 返回的值，禁止转成整数、截断或自行重新生成；后续 `get`、`save`、`run` 和详情页链接都使用同一个原值。
+
 需要查看某次历史执行结果时才给 `get` 传 `--version`：
 
 ```bash
@@ -140,16 +142,16 @@ node <skill-dir>/scripts/validate_canvas.mjs ./canvas.json
 https://workflow.58pic.com/zh/workflow/<workflow-id>
 ```
 
-例如工作流 ID 为 `4923`：
+例如工作流 ID 为 `1tvy7hfevfc34`：
 
 ```text
-https://workflow.58pic.com/zh/workflow/4923
+https://workflow.58pic.com/zh/workflow/1tvy7hfevfc34
 ```
 
 推荐回复格式：
 
 ```markdown
-工作流已保存：[打开工作流详情](https://workflow.58pic.com/zh/workflow/4923)
+工作流已保存：[打开工作流详情](https://workflow.58pic.com/zh/workflow/1tvy7hfevfc34)
 ```
 
 - `create` 必须使用成功响应返回的真实工作流 ID。
