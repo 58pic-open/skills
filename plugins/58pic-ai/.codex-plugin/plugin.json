@@ -1,7 +1,7 @@
 {
   "name": "58pic-ai",
-  "version": "0.2.0",
-  "description": "Generate images/videos, search assets, inspect models, and manage account auth via 千图AI (58pic) open platform.",
+  "version": "0.3.0",
+  "description": "Generate images/videos, run 智能设计 industry agents and MiniApp 风格玩法, search assets, inspect models, and manage account auth via 千图AI (58pic) open platform.",
   "author": {
     "name": "58pic Open",
     "url": "https://github.com/58pic-open"
@@ -18,13 +18,16 @@
     "text-to-image",
     "image-to-image",
     "text-to-video",
-    "image-to-video"
+    "image-to-video",
+    "design-agent",
+    "miniapp",
+    "ecommerce-design"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "58pic AI",
     "shortDescription": "Use 千图AI for generation, assets, models, and account workflows.",
-    "longDescription": "58pic AI adds focused Codex skills for 千图AI open platform workflows: 58pic-generate for image/video generation, 58pic-assets for stock asset search and download, 58pic-models for model discovery and capability checks, and 58pic-account for CLI setup, authentication, credits, and config.",
+    "longDescription": "58pic AI adds focused Codex skills for 千图AI open platform workflows: 58pic-generate for image/video generation, 58pic-assets for stock asset search and download, 58pic-models for model discovery and capability checks, and 58pic-account for CLI setup, authentication, credits, and config, 58pic-design-agent for 智能设计 industry agents (电商 / 海报 / 品牌 / 社媒 / 办公 / 视频) with follow-up Q&A and revisions, and 58pic-miniapp for one-click MiniApp 风格玩法.",
     "developerName": "58pic Open",
     "category": "Creativity",
     "capabilities": [
@@ -33,7 +36,9 @@
       "Stock Asset Search",
       "Model Discovery",
       "Account Auth",
-      "CLI Workflows"
+      "CLI Workflows",
+      "Design Agents",
+      "MiniApps"
     ],
     "websiteURL": "https://ai.58pic.com/open-platform",
     "defaultPrompt": [
@@ -41,7 +46,9 @@
       "Make a video with 千图AI",
       "Search 58pic stock assets",
       "Check my 58pic credits",
-      "List available 58pic AI models"
+      "List available 58pic AI models",
+      "用电商设计 Agent 做一套商品主图",
+      "用千图风格玩法做同款效果"
     ],
     "brandColor": "#00B878",
     "composerIcon": "./assets/icon.png",
