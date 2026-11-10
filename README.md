@@ -12,6 +12,8 @@ Install into Claude Code / compatible AI IDEs with one command.
 | [`58pic-models`](./58pic-models/SKILL.md) | List AI models and inspect model capabilities |
 | [`58pic-account`](./58pic-account/SKILL.md) | Configure CLI auth, API keys, OAuth login, and credits |
 | [`58pic-workflow`](./58pic-workflow/SKILL.md) | Create, preserve, save, and run 千图工作流 canvases |
+| [`58pic-design-agent`](./58pic-design-agent/SKILL.md) | Run 智能设计 industry agents (电商 / 海报 / 品牌 / 社媒 / 办公 / 视频) with follow-up Q&A and revisions |
+| [`58pic-miniapp`](./58pic-miniapp/SKILL.md) | Run MiniApp 风格玩法 (商品套图, 批量换背景, AI 详情页 …) |
 
 ## Install
 
@@ -40,6 +42,8 @@ npx skills add 58pic-open/skills/58pic-assets
 npx skills add 58pic-open/skills/58pic-models
 npx skills add 58pic-open/skills/58pic-account
 npx skills add 58pic-open/skills/58pic-workflow
+npx skills add 58pic-open/skills/58pic-design-agent
+npx skills add 58pic-open/skills/58pic-miniapp
 ```
 
 ## Prerequisites
@@ -58,6 +62,8 @@ After installing, invoke the skill in your AI IDE:
 /58pic-models list image models
 /58pic-account check my credits
 /58pic-workflow list my workflows and inspect the canvas before editing
+/58pic-design-agent 用电商设计 Agent 给这款保温杯做一套亚马逊主图
+/58pic-miniapp 用商品套图玩法把这张图做成一套主图
 ```
 
 The skills will:
